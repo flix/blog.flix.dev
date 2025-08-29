@@ -1,5 +1,6 @@
 +++
 title = "Redundancies as Compile-Time Errors"
+description = "How Flix treats unused and redundant code as compile-time errors to catch bugs and improve maintainability"
 date = 2020-02-01
 authors = ["Magnus Madsen"]
 

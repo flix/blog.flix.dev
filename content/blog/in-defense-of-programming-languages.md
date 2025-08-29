@@ -1,5 +1,6 @@
 +++
 title = "In Defense of Programming Languages"
+description = "A response to common criticisms about new programming languages and thoughts on improving communication between language designers and developers"
 date = 2021-07-01
 authors = ["Magnus Madsen"]
 

@@ -1,5 +1,6 @@
 +++
 title = "Taming Impurity with Polymorphic Effects"
+description = "How Flix uses a type and effect system to cleanly separate pure and impure code while supporting equational reasoning"
 date = 2020-05-01
 
 [taxonomies]
