@@ -1,5 +1,5 @@
 +++
-title = "Blog Archive"
+title = "Archive"
 template = "archive.html"
 sort_by = "date"
 +++
