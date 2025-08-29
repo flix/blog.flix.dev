@@ -30,7 +30,7 @@ switch {
 
 where the boolean expressions `cond1`, `cond2`, and `cond3` are evaluated from top to bottom until one of them returns true and then its associated body expression is evaluated. The idea, quite simply, is to have a control-flow structure that visually resembles an ordinary pattern match, but where there is no match value.
 
-In hind-sight, the `switch` expression is nothing more than a glorified `if-then-else-if` construct that does not carry its own weight. It is an expenditure on the complexity and strangeness budget that offers almost no gain over using plain `if-then-else-if`. Moreover, it is error-prone, because it lacks and explicit `else` branch in case none of the conditions evaluate to true. We plan to remove it in future versions of Flix.
+In hind-sight, the `switch` expression is nothing more than a glorified `if-then-else-if` construct that does not carry its own weight. It is an expenditure on the complexity and strangeness budget that offers almost no gain over using plain `if-then-else-if`. Moreover, it is error-prone, because it lacks an explicit `else` branch in case none of the conditions evaluate to true. We plan to remove it in future versions of Flix.
 
 ### String Concatenation with Plus
 
@@ -59,7 +59,7 @@ But, this screws up interoperability with Java libraries. In Java `null` might b
 
 Flix aims to have a robust standard library that avoids some of the pitfalls of other standard libraries. We have been particularly focused on two aspects: (i) ensuring that functions and types have consistent names, e.g. `map` is named `map` for both `Option` and `List`, and (ii) to avoid partial functions, such as `List.head` and `List.tail` which are not defined for empty lists.
 
-Yet, despite these principles, we still managed to implement some problematic functions in the library. For example, we used to have the functions `Option.isNone` and `Options.isSome`. The problem with these functions is that they are not really useful and they lead to brittle code. For example, *if* `Options.isSome` returns `true` then that information cannot be used to unwrap the option anyway. Thus such functions are not really useful.
+Yet, despite these principles, we still managed to implement some problematic functions in the library. For example, we used to have the functions `Option.isNone` and `Option.isSome`. The problem with these functions is that they are not really useful and they lead to brittle code. For example, *if* `Option.isSome` returns `true` then that information cannot be used to unwrap the option anyway. Thus such functions are not really useful.
 
 ## Function Call Syntax
 

@@ -163,7 +163,7 @@ def foreach(f: a -> Unit \ IO, xs: List[a]): Unit \ IO = ...
 ```
 
 The signature `f: a -> Unit \ IO` denotes an impure function
-from `b` to `Unit`. Passing a pure function to `foreach` is
+from `a` to `Unit`. Passing a pure function to `foreach` is
 a compile-time type error. Given that `f` is impure and `f` is called
 within `foreach`, it is itself impure. We enforce that
 the `f` function is impure because it is pointless to apply
