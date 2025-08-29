@@ -2,6 +2,7 @@
 title = "Hello, World!"
 date = "2093-02-16"
 description = "My first post using the tabi theme."
+authors = ["Magnus Madsen"]
 
 [taxonomies]
 tags = ["hello-world"]

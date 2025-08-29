@@ -4,9 +4,13 @@ base_url = "https://blog.flix.dev/"
 compile_sass = true
 build_search_index = false
 
-taxonomies = [{name = "tags", feed = true}]
+taxonomies = [
+    {name = "tags", feed = true},
+    {name = "authors", feed = true}
+]
 
 [extra]
+show_author = true
 menu = [
     { name = "blog", url = "blog", trailing_slash = true },
     { name = "tags", url = "tags", trailing_slash = true },
