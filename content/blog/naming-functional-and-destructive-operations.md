@@ -3,7 +3,7 @@ title = "Naming Functional and Destructive Operations"
 description = "A discussion on naming consistency when a programming language supports both functional and destructive operations"
 date = 2020-04-01
 [taxonomies]
-tags = ["flix", "naming", "functional-programming", "imperative-programming", "language-design"]
+tags = ["naming", "language-design", "flix"]
 [extra]
 author = "Magnus Madsen"
 +++

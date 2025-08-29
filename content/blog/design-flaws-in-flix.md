@@ -3,7 +3,7 @@ title = "Design Flaws in Flix"
 description = "A reflection on design flaws made during the development of the Flix programming language"
 date = 2020-01-01
 [taxonomies]
-tags = ["flix", "language-design", "design-flaw"]
+tags = ["language-design", "flix"]
 [extra]
 author = "Magnus Madsen"
 +++

@@ -4,7 +4,7 @@ date = 2021-07-01
 authors = ["Magnus Madsen"]
 
 [taxonomies]
-tags = ["language-design", "community", "communication", "flix"]
+tags = ["communication", "language-fatigue", "flix"]
 +++
 
 This blog post is written in defense of programming language enthusiasts; whether they are compiler hackers, programming language hobbyists, industry professionals, or academics.

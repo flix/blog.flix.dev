@@ -1,6 +1,9 @@
 +++
 title = "Taming Impurity with Polymorphic Effects"
 date = 2020-05-01
+
+[taxonomies]
+tags = ["effects", "language-design", "flix"]
 +++
 
 In the blog post [Patterns of Bugs](https://www.digitalmars.com/articles/b60.html), Walter Bright,

@@ -4,7 +4,7 @@ date = 2020-02-01
 authors = ["Magnus Madsen"]
 
 [taxonomies]
-tags = ["compiler", "static-analysis", "redundancy", "flix"]
+tags = ["bug-finding", "correctness", "flix"]
 +++
 
 As software developers, we strive to write correct and maintainable code. Today, I want to share some code where I failed in these two goals.
