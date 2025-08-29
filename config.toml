@@ -11,6 +11,7 @@ taxonomies = [
 
 [extra]
 show_author = true
+favicon = "favicon.png"
 menu = [
     { name = "blog", url = "blog", trailing_slash = true },
     { name = "tags", url = "tags", trailing_slash = true },
