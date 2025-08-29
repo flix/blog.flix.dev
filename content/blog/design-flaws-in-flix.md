@@ -1,8 +1,8 @@
 +++
 title = "Design Flaws in Flix"
 description = "A reflection on design flaws made during the development of the Flix programming language"
-authors = ["Magnus Madsen"]
 date = 2020-01-01
+authors = ["Magnus Madsen"]
 
 [taxonomies]
 tags = ["language-design", "flix"]
