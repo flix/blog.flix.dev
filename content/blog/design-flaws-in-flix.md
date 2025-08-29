@@ -5,7 +5,7 @@ date = 2020-01-01
 [taxonomies]
 tags = ["language-design", "flix"]
 [extra]
-author = "Magnus Madsen"
+authors = ["Magnus Madsen"]
 +++
 
 Inspired by the blog post [Design Flaws in Futhark](https://futhark-lang.org/blog/2019-12-18-design-flaws-in-futhark.html), I decided to take stock and reflect on some of the design flaws that I believe we made during the development of the Flix programming language. I went through old Github issues and pull requests to discover some of the challenging issues that we have been or still are struggling with. I will classify the design flaws into four categories: (i) design flaws that still plague the Flix language, (ii) design flaws that have been fixed, (iii) poor designs that were thankfully never implemented, and finally (iv) design choices where the jury is still out.
