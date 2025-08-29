@@ -1,11 +1,11 @@
 +++
 title = "Naming Functional and Destructive Operations"
 description = "A discussion on naming consistency when a programming language supports both functional and destructive operations"
+authors = ["Magnus Madsen"]
 date = 2020-04-01
+
 [taxonomies]
 tags = ["naming", "language-design", "flix"]
-[extra]
-authors = ["Magnus Madsen"]
 +++
 
 It has been said that there are only two hard problems in computer science: (i) naming, (ii) cache invalidation, and (iii) off-by-one errors. In this blog post, I will explain a *name consistency issue* that arises when a programming language wants to support both functional and destructive operations. (A functional operation always returns new data, whereas a destructive operation mutates existing data. For example, functionally reversing an array returns a *new* array with its elements reversed, whereas destructively reversing an array mutates the array in place.)
