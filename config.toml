@@ -1,0 +1,17 @@
+title = "The Flix Development Blog"
+theme = "tabi"
+base_url = "https://blog.flix.dev/"
+compile_sass = true
+build_search_index = false
+
+taxonomies = [{name = "tags", feed = true}]
+
+[extra]
+menu = [
+    { name = "blog", url = "blog", trailing_slash = true },
+    { name = "tags", url = "tags", trailing_slash = true },
+]
+
+[markdown]
+highlight_code = true
+
