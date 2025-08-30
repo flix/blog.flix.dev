@@ -1,4 +1,4 @@
-title = "The Flix Development Blog"
+title = "The Flix Blog"
 theme = "tabi"
 base_url = "https://blog.flix.dev/"
 compile_sass = true
