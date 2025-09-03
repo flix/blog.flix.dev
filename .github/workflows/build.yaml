@@ -40,8 +40,12 @@ jobs:
       - name: Build site
         run: |
           cd blog-site
+          mkdir -p themes/tabi/templates/tabi
+          mv themes/extend_body.html themes/tabi/templates/tabi/extend_body.html
           zola build
       - name: Show build output
         run: |
           cd blog-site
           tree .
+          cat public/404.html
+          cat public/design-flaws-in-flix/index.html
