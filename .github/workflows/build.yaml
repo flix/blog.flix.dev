@@ -21,6 +21,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           path: blog-site
+          submodules: true
       - name: Check out Zola
         uses: actions/checkout@v5
         with:
