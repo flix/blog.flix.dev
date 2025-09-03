@@ -35,7 +35,7 @@ jobs:
       - name: Build Zola
         run: |
           cd zola
-          cargo install --locked --path .
+          cargo install --path .
       - name: Build site
         run: |
           cd blog-site
