@@ -1,6 +1,6 @@
 name: Build
 
-on: [ pull_request, merge_group ]
+on: [ push, pull_request, merge_group ]
 
 permissions:
   contents: read
