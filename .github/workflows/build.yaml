@@ -10,6 +10,9 @@ concurrency:
   cancel-in-progress: true
   group: build-${{ github.ref }}
 
+env:
+  CARGO_TERM_COLOR: always
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,7 +21,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           path: blog-site
-      - name: Check out zola
+      - name: Check out Zola
         uses: actions/checkout@v5
         with:
           submodules: true
@@ -27,5 +30,11 @@ jobs:
           path: zola
       - name: Show dirs
         run: ls -Alh
-      - name: Switch to zola dir
+      - name: Switch to Zola dir
         run: cd zola
+      - name: Build Zola
+        run: cargo install --locked
+      - name: Switch to blog site
+        run: cd ../blog-site
+      - name: Build site
+        run: zola build
