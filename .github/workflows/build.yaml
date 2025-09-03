@@ -1,0 +1,20 @@
+name: Build
+
+on: [ pull_request, merge_group ]
+
+permissions:
+  contents: read
+
+# Cancel previous runs if the PR is updated
+concurrency:
+  cancel-in-progress: true
+  group: build-${{ github.ref }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+      - name: Show repo tree
+        run: tree .
