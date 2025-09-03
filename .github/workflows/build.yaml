@@ -29,12 +29,14 @@ jobs:
           ref: v0.19.2
           path: zola
       - name: Show dirs
-        run: ls -Alh
-      - name: Switch to Zola dir
-        run: cd zola
+        run: |
+          pwd
+          ls -Alh
       - name: Build Zola
-        run: cargo install --locked
-      - name: Switch to blog site
-        run: cd ../blog-site
+        run: |
+          cd zola
+          cargo install --locked
       - name: Build site
-        run: zola build
+        run: |
+          cd blog-site
+          zola build
