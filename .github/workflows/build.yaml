@@ -11,6 +11,14 @@ concurrency:
   group: build-${{ github.ref }}
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v5
+      - name: Show commit sha
+        run: echo ${{ github.event.pull_request.head.sha }}
+
   build-zola:
     runs-on: ubuntu-latest
     steps:
