@@ -48,4 +48,3 @@ jobs:
           cd blog-site
           tree .
           cat public/404.html
-          cat public/design-flaws-in-flix/index.html
