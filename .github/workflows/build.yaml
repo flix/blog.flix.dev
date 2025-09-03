@@ -42,4 +42,6 @@ jobs:
           cd blog-site
           zola build
       - name: Show build output
-        run: tree blog-site
+        run: |
+          cd blog-site
+          tree .
