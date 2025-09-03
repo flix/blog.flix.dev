@@ -11,12 +11,23 @@ concurrency:
   group: build-${{ github.ref }}
 
 jobs:
-  build:
+  build-zola:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out branch
+      - name: Check out zola
         uses: actions/checkout@v5
         with:
           submodules: true
+          repository: getzola/zola
+          ref: 45d3f8d
+      - name: Show repo tree
+        run: tree .
+
+  build:
+    needs: build-zola
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out PR
+        uses: actions/checkout@v5
       - name: Show repo tree
         run: tree .
