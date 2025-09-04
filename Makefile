@@ -1,4 +1,4 @@
-.PHONY: build
+.PHONY: build-site
 
-build:
+build-site:
     zola build
