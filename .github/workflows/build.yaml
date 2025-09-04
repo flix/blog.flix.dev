@@ -22,14 +22,15 @@ jobs:
         with:
           path: blog-site
           submodules: true
-      - name: Check out Zola
-        if: ${{ steps.cargo-cache.outputs.cache-hit != 'true' }}
+      - name: Check out Zola cargo lock (for cache key)
         uses: actions/checkout@v5
         with:
-          submodules: true
           repository: getzola/zola
           ref: v0.19.2
-          path: zola
+          path: zola-cargo
+          sparse-checkout: |
+            Cargo.lock
+          sparse-checkout-cone-mode: false
       - name: Restore cached cargo builds
         id: cargo-cache
         uses: actions/cache@v4
@@ -39,7 +40,15 @@ jobs:
             ~/.cargo/registry/index/
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('zola/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-${{ hashFiles('zola-cargo/Cargo.lock') }}
+      - name: Check out Zola
+        if: ${{ steps.cargo-cache.outputs.cache-hit != 'true' }}
+        uses: actions/checkout@v5
+        with:
+          submodules: true
+          repository: getzola/zola
+          ref: v0.19.2
+          path: zola
       - name: Conditionally build zola (if no cached binary was found)
         if: ${{ steps.cargo-cache.outputs.cache-hit != 'true' }}
         run: cargo install --path zola/
