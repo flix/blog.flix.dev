@@ -22,11 +22,14 @@ jobs:
         with:
           path: blog-site
           submodules: true
+      - name: Set Zola version
+        id: zola-version
+        run: echo "version=v0.19.2" >> $GITHUB_OUTPUT
       - name: Check out Zola cargo lock (for cache key)
         uses: actions/checkout@v5
         with:
           repository: getzola/zola
-          ref: v0.19.2
+          ref: ${{ steps.zola-version.outputs.version }}
           path: zola-cargo
           sparse-checkout: |
             Cargo.lock
@@ -47,7 +50,7 @@ jobs:
         with:
           submodules: true
           repository: getzola/zola
-          ref: v0.19.2
+          ref: ${{ steps.zola-version.outputs.version }}
           path: zola
       - name: Conditionally build Zola (if no cached binary was found)
         if: ${{ steps.cargo-cache.outputs.cache-hit != 'true' }}
