@@ -29,20 +29,23 @@ jobs:
           repository: getzola/zola
           ref: v0.19.2
           path: zola
-      - name: Show dirs
-        run: |
-          pwd
-          ls -Alh
+      - name: Check for cached Zola build
+        id: check-cache-zola
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - name: Build Zola
-        run: |
-          cd zola
-          cargo install --path .
+        run: cargo install --path zola/
       - name: Build site
-        run: |
-          cd blog-site
-          make
+        run: make
+        working-directory: ./blog-site
       - name: Show build output
         run: |
-          cd blog-site
           tree .
           cat public/404.html
+        working-directory: ./blog-site
