@@ -32,7 +32,7 @@ jobs:
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - name: Check out Zola]
+      - name: Check out Zola
         if: steps.check-cache-zola.outputs.cache-hit != 'true'
         uses: actions/checkout@v5
         with:
