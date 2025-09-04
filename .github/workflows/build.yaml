@@ -22,13 +22,6 @@ jobs:
         with:
           path: blog-site
           submodules: true
-      - name: Check out Zola
-        uses: actions/checkout@v5
-        with:
-          submodules: true
-          repository: getzola/zola
-          ref: v0.19.2
-          path: zola
       - name: Check for cached Zola build
         id: check-cache-zola
         uses: actions/cache@v4
@@ -39,7 +32,16 @@ jobs:
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Check out Zola]
+        if: steps.check-cache-zola.outputs.cache-hit != 'true'
+        uses: actions/checkout@v5
+        with:
+          submodules: true
+          repository: getzola/zola
+          ref: v0.19.2
+          path: zola
       - name: Build Zola
+        if: steps.check-cache-zola.outputs.cache-hit != 'true'
         run: cargo install --path zola/
       - name: Build site
         run: make
