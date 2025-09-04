@@ -22,6 +22,14 @@ jobs:
         with:
           path: blog-site
           submodules: true
+      - name: Check out Zola
+        if: ${{ steps.cargo-cache.outputs.cache-hit != 'true' }}
+        uses: actions/checkout@v5
+        with:
+          submodules: true
+          repository: getzola/zola
+          ref: v0.19.2
+          path: zola
       - name: Restore cached cargo builds
         id: cargo-cache
         uses: actions/cache@v4
@@ -31,17 +39,10 @@ jobs:
             ~/.cargo/registry/index/
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-${{ hashFiles('zola/Cargo.lock') }}
       - name: Debug print cache hit value
         run: echo ${{ steps.cargo-cache.outputs.cache-hit }}
-      - name: Check out Zola
-        if: ${{ steps.cargo-cache.outputs.cache-hit != 'true' }}
-        uses: actions/checkout@v5
-        with:
-          submodules: true
-          repository: getzola/zola
-          ref: v0.19.2
-          path: zola
+
       - name: Build Zola
         if: ${{ steps.cargo-cache.outputs.cache-hit != 'true' }}
         run: cargo install --path zola/
