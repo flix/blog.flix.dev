@@ -1,0 +1,65 @@
+name: Build
+
+on: [ push, pull_request, merge_group ]
+
+permissions:
+  contents: read
+
+# Cancel previous runs if the PR is updated
+concurrency:
+  cancel-in-progress: true
+  group: build-${{ github.ref }}
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out PR
+        uses: actions/checkout@v5
+        with:
+          path: blog-site
+          submodules: true
+      - name: Set Zola version
+        id: zola-version
+        run: echo "version=v0.19.2" >> $GITHUB_OUTPUT
+      - name: Check out Zola cargo lock (for cache key)
+        uses: actions/checkout@v5
+        with:
+          repository: getzola/zola
+          ref: ${{ steps.zola-version.outputs.version }}
+          path: zola-cargo
+          sparse-checkout: |
+            Cargo.lock
+          sparse-checkout-cone-mode: false
+      - name: Restore cached cargo builds
+        id: cargo-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('zola-cargo/Cargo.lock') }}
+      - name: Conditionally check out Zola (if version changed)
+        if: ${{ steps.cargo-cache.outputs.cache-hit != 'true' }}
+        uses: actions/checkout@v5
+        with:
+          submodules: true
+          repository: getzola/zola
+          ref: ${{ steps.zola-version.outputs.version }}
+          path: zola
+      - name: Conditionally build Zola (if no cached binary was found)
+        if: ${{ steps.cargo-cache.outputs.cache-hit != 'true' }}
+        run: cargo install --path zola/
+      - name: Build site
+        run: make
+        working-directory: ./blog-site
+      - name: Show build output
+        run: |
+          tree .
+          cat public/404.html
+        working-directory: ./blog-site
