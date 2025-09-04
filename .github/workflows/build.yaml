@@ -1,0 +1,48 @@
+name: Build
+
+on: [ push, pull_request, merge_group ]
+
+permissions:
+  contents: read
+
+# Cancel previous runs if the PR is updated
+concurrency:
+  cancel-in-progress: true
+  group: build-${{ github.ref }}
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out PR
+        uses: actions/checkout@v5
+        with:
+          path: blog-site
+          submodules: true
+      - name: Check out Zola
+        uses: actions/checkout@v5
+        with:
+          submodules: true
+          repository: getzola/zola
+          ref: v0.19.2
+          path: zola
+      - name: Show dirs
+        run: |
+          pwd
+          ls -Alh
+      - name: Build Zola
+        run: |
+          cd zola
+          cargo install --path .
+      - name: Build site
+        run: |
+          cd blog-site
+          make
+      - name: Show build output
+        run: |
+          cd blog-site
+          tree .
+          cat public/404.html
