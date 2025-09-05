@@ -12,11 +12,14 @@ taxonomies = [
 [extra]
 show_author = true
 favicon = "favicon.png"
+favicon_emoji = "F"
 menu = [
     { name = "blog", url = "blog", trailing_slash = true },
     { name = "tags", url = "tags", trailing_slash = true },
 ]
+stylesheets = ["highlight.css"]
+hljs = "highlight.js"
+hljs_sha = "066eac05c3c080528982298c064a8d9b265e8e5aa085649067c461ccb70fb0e8"
 
 [markdown]
 highlight_code = true
-

@@ -62,4 +62,5 @@ jobs:
         run: |
           tree .
           cat public/404.html
+          cat public/blog/design-flaws-in-flix/index.html
         working-directory: ./blog-site
