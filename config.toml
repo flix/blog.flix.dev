@@ -19,7 +19,7 @@ menu = [
 ]
 stylesheets = ["highlight.css"]
 highlightjs = "highlight.js"
-highlightjs-integrity = "066eac05c3c080528982298c064a8d9b265e8e5aa085649067c461ccb70fb0e8"
+highlightjs_integrity = "066eac05c3c080528982298c064a8d9b265e8e5aa085649067c461ccb70fb0e8"
 
 [markdown]
 highlight_code = true
