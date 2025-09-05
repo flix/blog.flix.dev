@@ -18,8 +18,8 @@ menu = [
     { name = "tags", url = "tags", trailing_slash = true },
 ]
 stylesheets = ["highlight.css"]
-highlightjs = "highlight.js"
-highlightjs_integrity = "066eac05c3c080528982298c064a8d9b265e8e5aa085649067c461ccb70fb0e8"
+hljs = "highlight.js"
+hljs_sha = "066eac05c3c080528982298c064a8d9b265e8e5aa085649067c461ccb70fb0e8"
 
 [markdown]
 highlight_code = true

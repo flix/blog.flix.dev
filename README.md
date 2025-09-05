@@ -9,4 +9,4 @@
 5. `zola serve`
 
 ## Updating highlight js
-Replace `static/highlight.js` with the new update and update the sha256 sum under `highlightjs_integrity` in `config.toml`.
+Replace `static/highlight.js` with the new update and update the sha256 sum under `hljs_sha` in `config.toml`.
