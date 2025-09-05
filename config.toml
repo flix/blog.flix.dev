@@ -18,6 +18,7 @@ menu = [
     { name = "tags", url = "tags", trailing_slash = true },
 ]
 stylesheets = ["highlight.css"]
+highlightjs = "highlight.js"
 
 [markdown]
 highlight_code = true
