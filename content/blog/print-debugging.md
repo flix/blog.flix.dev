@@ -12,14 +12,13 @@ tags = ["effects", "language-design", "flix"]
 
 — Valery Legasov (*Jared Harris, Chernobyl 2019*)
 
-<div style="color: #ff00ff;">
+Every lie we tell to the type system on
 
-
-
+Part of being a programming language designer is making difficult trade-offs.
+In In this blog post, Lifting the veil from a PL designers point of view.
 
 Add some quotes from HackerNews
 
-In this blog post, Lifting the veil from a PL designers point of view.
 
 What we expect from a type system
 
@@ -70,5 +69,3 @@ forcing the argument to pass through
 Everything is printable
 
 Getting the loc and offset is pure
-
-</div>
