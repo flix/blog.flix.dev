@@ -1,5 +1,5 @@
 +++
-title = "Print Debugging"
+title = "Print Debugging in an Effectful World"
 description = "..."
 date = 2025-09-15
 authors = ["Magnus Madsen"]
@@ -8,12 +8,18 @@ authors = ["Magnus Madsen"]
 tags = ["effects", "language-design", "flix"]
 +++
 
-# Print Debugging in an Effectful World
+> **"Every lie we tell incurs a debt to the truth. Sooner or later, that debt is paid."**
 
-"Every lie we tell incurs a debt to the truth. Sooner or later, that debt is paid".
-- Legasov ( Jared Harris)
+— Valery Legasov (*Jared Harris, Chernobyl 2019*)
 
-Lifting the veil from a PL designers point of view.
+<div style="color: #ff00ff;">
+
+
+
+
+Add some quotes from HackerNews
+
+In this blog post, Lifting the veil from a PL designers point of view.
 
 What we expect from a type system
 
@@ -65,3 +71,4 @@ Everything is printable
 
 Getting the loc and offset is pure
 
+</div>
