@@ -107,7 +107,7 @@ print debugging:
 
 # Print-Debugging - Attempt #1
 
-We introduce a special `debug` function: 
+We introduce a special `dprintln` function: 
 
 ```flix
 mod Debug {
@@ -178,12 +178,31 @@ reimplement part of the effect system, just purely and adhoc. This does not work
 
 Back to the drawing board.
 
-# Print-Debugging - Attempt #2
+# Print-Debugging - Fixed
 
-TODO
+We are kind of stuck. We want to lie to the effect system, but in doing so, we
+wreck havoc on the entire system. We need a better lie. Or rather a more
+pragmatic approach. 
 
-# Print-Debugging - Attempt #3
+We have been going against the grain of type and effect system by lying about
+the purity of `dprintln`. Well, what if we did not? We could let `dprintln` have
+a new special effect -- call it `Debug`. In our function we let the `Debug`
+effect propagate. 
 
+```flix
+def sum(x: Int32, y: Int32): Int32 =
+    let result = x + y;
+    Debug.dprintln("The sum of ${x} and ${y} is ${result}");
+    result
+```
+
+What happens now is that the expression, the statement-expression, and
+ultimately the let-binding all get the `Debug` effect. In fact, the type and
+effect system will precisely track the effect through the entire function body
+precisely, including through function calls, pipelines, closures, etc. etc. 
+
+Now in some sense we are back where we started, because now we get an error 
+that our type and effect signature of `sum` lacks the `Debug` effect.
 
 # Look Ma': No Macros!
 
