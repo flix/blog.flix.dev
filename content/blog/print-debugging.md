@@ -1,5 +1,5 @@
 +++
-title = "Print Debugging in an Effectful World"
+title = "Effect Systems vs Print Debugging: A Pragmatic Solution"
 description = "A discussion of how the Flix type and effect system supports print-debugging."
 date = 2025-09-15
 authors = ["Magnus Madsen"]
