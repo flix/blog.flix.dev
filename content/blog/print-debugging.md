@@ -48,14 +48,14 @@ def add(x: Int32, y: Int32): Int32 \ { } = x + y
                                   // ^^^ empty effect set
 ```
 
-We -- the Flix language designers -- are extremely paranoid about ensuring that
+We — the Flix language designers — are extremely paranoid about ensuring that
 the purity of the function is _not a lie._ But surely one little lie is okay,
 you say? As my mind turns to dark visions of unspeakable cosmic horror.
 
 ## Print Debugging
 
 A sunny fall day Jim was sitting in front of his computer. He had just read a
-blog post about the latest programming language -- Flix -- on a website called
+blog post about the latest programming language — Flix — on a website called
 HackerNews. Eager to try it out, he downloaded the compiler, and typed in: 
 
 ```flix
@@ -79,8 +79,8 @@ Running the Flix compiler, Jim was confronted with:
 6 |> def sum(x: Int32, y: Int32): Int32 = ...
 ```
 
-Dismayed -- and perhaps not knowing about the cosmic horrors lurking in the
-shadows -- Jim read a bit about effect systems and then went back to
+Dismayed — and perhaps not knowing about the cosmic horrors lurking in the
+shadows — Jim read a bit about effect systems and then went back to
 HackerNews and wrote:
 
 > Ever tried adding a simple print statement for debugging purposes while coding
@@ -109,7 +109,7 @@ We may be academics, but we are trying to build a real programming language, so
 we have to be receptive to feedback. So in that spirit, let us try to support
 print debugging: 
 
-# Print-Debugging - Attempt #1
+# Print-Debugging — Attempt #1
 
 We introduce a special `dprintln` function: 
 
@@ -145,7 +145,7 @@ The Flix compiler rejects our program with the error:
              useless expression.
 ```
 
-The Flix compiler has -- quite correctly -- identified that the `dprintln`
+The Flix compiler has — quite correctly — identified that the `dprintln`
 expression is useless. It has no side-effect and its result is unused, hence it
 can be removed. Under normal circumstances this is definitely a bug, but here it
 is our intention. We can try to get around the problem with another trick:
@@ -182,7 +182,7 @@ reimplement part of the effect system, just purely and adhoc. This does not work
 
 Back to the drawing board.
 
-# Print-Debugging - Fixed
+# Print-Debugging — Fixed
 
 We are kind of stuck. We want to lie to the effect system, but in doing so, we
 wreck havoc on the entire system. We need a better lie. Or rather a more
@@ -190,7 +190,7 @@ pragmatic approach.
 
 We have been going against the grain of type and effect system by lying about
 the purity of `dprintln`. Well, what if we did not? We could let `dprintln` have
-a new special effect -- call it `Debug`. In our function we let the `Debug`
+a new special effect — call it `Debug`. In our function we let the `Debug`
 effect propagate. 
 
 ```flix
