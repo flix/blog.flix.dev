@@ -141,10 +141,26 @@ The Flix compiler rejects our program with the error:
              useless expression.
 ```
 
+The Flix compiler has -- quite correctly -- identified that the `dprintln`
+expression is useless. It has no side-effect and its result is unused, hence it
+can be removed. Under normal circumstances this is definitely a bug, but here it
+is our intention. We can try to get around the problem with another trick:
 
-# Print-Debugging - Attempt #1
+```flix
+def sum(x: Int32, y: Int32): Int32 =
+    let result = x + y;
+    let _ = Debug.dprintln("The sum of ${x} and ${y} is ${result}");
+    result
+```
+
+Flix allows this. 
+
+# Print-Debugging - Attempt #2
 
 TODO
+
+# Print-Debugging - Attempt #3
+
 
 # Look Ma': No Macros!
 
