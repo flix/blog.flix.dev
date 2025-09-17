@@ -101,9 +101,9 @@ The art of being a programming language designer is facing difficult trade-offs:
   break anything anywhere, ever. ("What do you mean turning off the fuel for the
   engines crashes the plane? I thought this was a safe aircraft!")
 
-# Print-Debugging, Take One
+# Print-Debugging, Attempt #1
 
-
+We are, in fact, not academics 
 
 <div class="hljs-deletion">
 
@@ -127,4 +127,17 @@ Getting the loc and offset is pure
 
 # Look Ma': No Macros!
 
-Rust has ...
+Rust has a beautiful [`dbg!` macro](https://doc.rust-lang.org/std/macro.dbg.html). It works something like this:
+
+```rust
+let a = 2;
+let b = dbg!(a * 2) + 1;
+//      ^-- prints: [src/main.rs:2:9] a * 2 = 4
+assert_eq!(b, 5);
+```
+
+The macro has access to the syntax tree, so not only can it print the file name,
+the line, and the column offset, it can also print its expression. Beautiful!
+Flix does not (yet?) have macros. And in any case, we would not add them for a
+single feature like this. Nevertheless, is there something we can do?
+
