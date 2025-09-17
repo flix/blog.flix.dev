@@ -41,16 +41,17 @@ required to reify the stack.
 
 These are scary program transformations!
 
-Hence when a Flix programmer writes a function:
+Hence, when a Flix programmer writes a function:
 
 ```flix
 def add(x: Int32, y: Int32): Int32 \ { } = x + y
                                   // ^^^ empty effect set
 ```
 
-We — the Flix language designers — are extremely paranoid about ensuring that
-the purity of the function is _not a lie._ But surely one little lie is okay,
-you say? As my mind turns to dark visions of unspeakable cosmic horror.
+We — the Flix language designers — are downright paranoid about ensuring that
+the effects of the function is not a lie. _But surely one little white lie is
+okay, you suggest, as you carelessly add that `unchecked_cast` to your program_,
+while I look on with dark visions of unspeakable cosmic horror.
 
 ## Print Debugging
 
