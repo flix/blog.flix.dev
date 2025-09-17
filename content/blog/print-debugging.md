@@ -50,7 +50,7 @@ you say? As my mind turns to dark visions of unspeakable cosmic horror.
 
 ## Print Debugging
 
-A sunny fall day James was sitting in front of his computer. He had just read a
+A sunny fall day Jim was sitting in front of his computer. He had just read a
 blog post about the latest programming language -- Flix -- on a website called
 HackerNews. Eager to try it out, he downloaded the compiler, and typed in: 
 
@@ -65,7 +65,7 @@ def sum(x: Int32, y: Int32): Int32 =
     result
 ```
 
-Running the Flix compiler, James was confronted with:
+Running the Flix compiler, Jim was confronted with:
 
 ```sh
 ❌ -- Type Error --
@@ -76,7 +76,7 @@ Running the Flix compiler, James was confronted with:
 ```
 
 Dismayed -- and perhaps not knowing about the cosmic horrors lurking in the
-shadows -- James read a bit about effect systems and then went back to
+shadows -- Jim read a bit about effect systems and then went back to
 HackerNews and wrote:
 
 > Ever tried adding a simple print statement for debugging purposes while coding
@@ -101,31 +101,50 @@ The art of being a programming language designer is facing difficult trade-offs:
   break anything anywhere, ever. ("What do you mean turning off the fuel for the
   engines crashes the plane? I thought this was a safe aircraft!")
 
-Despite being 
+We may be academics, but we are trying to build a real programming language, so
+we have to be receptive to feedback. So in that spirit, let us try to support
+print debugging: 
 
-# Print-Debugging, Attempt #1
+# Print-Debugging - Attempt #1
 
-We are, in fact, not academics 
+We introduce a special `debug` function: 
 
-<div class="hljs-deletion">
+```flix
+mod Debug {
+    pub def dprintln(x: a): Unit with ToString[a] =
+        unchecked_cast(println(x) as _ \ {}) 
+}
+```
 
-# A better solution, flix style
+We use an `unchecked_cast` to ignore the `IO` effect of the `println` function.
+We also accept any argument of type `a` as long as it has a `ToString[a]`
+instance. 
+
+Unfortunately, our function does not work so well. If we write:
+
+```flix
+def sum(x: Int32, y: Int32): Int32 =
+    let result = x + y;
+    Debug.dprintln("The sum of ${x} and ${y} is ${result}");
+    result
+```
+
+The Flix compiler rejects our program with the error:
+
+```sh
+❌ -- Redundancy Error --
+
+>> Useless expression: It has no side-effect(s) and its result is discarded.
+
+11 |         Debug.dprintln("The sum of ${x} and ${y} is ${result}");
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+             useless expression.
+```
 
 
+# Print-Debugging - Attempt #1
 
-
-## Getting source and line offset
-
-- THe debug pseudo macro, and how broken it is...
-
-
-## Other Lies
-
-Everything is printable
-
-Getting the loc and offset is pure
-
-</div>
+TODO
 
 # Look Ma': No Macros!
 
