@@ -33,7 +33,7 @@ To understand why, let us look at how the Flix compiler uses effects:
 - Flix relies on the effect system to *separate control-pure and control-impure
   code* to support effect handlers. In particular, control-pure code (i.e. code
   that does not trigger an effect) is compiled to code without support for
-  capturing the current deliminated continuation. 
+  capturing the current delimited continuation. 
 
 These are scary program transformations!
 
@@ -159,9 +159,9 @@ redundancy checker. Now the program compiles. We run and then:
 Nothing.
 
 The program does not print anything. The problem is that the whole-program
-optimizer has identifed that the expression `dprintln` is unused and can be
+optimizer has identified that the expression `dprintln` is unused and can be
 removed. This is good! We want to optimizer to remove dead code, especially in
-combination with inlining. But its now what we wanted here. 
+combination with inlining. But it's not what we wanted here. 
 
 At this point, we might think, can we not have the optimizer know about `dprintln` and treat it 
 specially? Unfortunately this does not work either. Imagine if we have:
@@ -213,7 +213,7 @@ the expression that prints nor eliminates it.
 However, we have not fully solved the problem. By allowing a function to have
 the `Debug` effect internally, but not externally, it means that a call to a
 pure function could still be moved or omitted. But in some sense this is OK.
-We debugging we want to debug the program as it will actually execute.
+When debugging we want to debug the program as it will actually execute.
 If an entire function call can be eliminated then we would not expect it to print. 
 
 The last detail that remains is that a lying type and effect system is not great.
@@ -222,9 +222,9 @@ when a program is compiled in development mode. Under production mode,
 the `Debug` effect cannot be hidden. It must be surfaced. Thus this pragmatic
 proposal has many desirable properties:
 
-- We can use `dprintln` for print debugging without too much thpught. It will just work out of the box.
-- We do have to remember that if an entire function is pure then it may be moved or eliminated by the opti,mizer,
-but this refects runtime beahavior anyway.
+- We can use `dprintln` for print debugging without too much thought. It will just work out of the box.
+- We do have to remember that if an entire function is pure then it may be moved or eliminated by the optimizer,
+but this reflects runtime behavior anyway.
 - Finally, in release mode the type and effect system does not lie.
 
 # Look Ma': No Macros!
@@ -244,7 +244,7 @@ Flix does not (yet?) have macros. And in any case, we would not add them for a
 single feature like this. 
 
 Nevertheless, we can get some of this functionality. Introducing **debug string
-interpolators**. In all its simplicitly, we can write:
+interpolators**. In all its simplicity, we can write:
 
 ```flix
 use Debug.dprintln
