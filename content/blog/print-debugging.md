@@ -232,7 +232,7 @@ proposal has many desirable properties:
 but this reflects runtime behavior anyway.
 - Finally, in release mode the type and effect system does not lie.
 
-# Look Ma': No Macros!
+# Addendum: Look Ma: No Macros!
 
 Rust has a beautiful [`dbg!` macro](https://doc.rust-lang.org/std/macro.dbg.html). It works something like this:
 
