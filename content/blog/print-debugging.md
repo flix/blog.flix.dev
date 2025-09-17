@@ -153,7 +153,30 @@ def sum(x: Int32, y: Int32): Int32 =
     result
 ```
 
-Flix allows this. 
+Using a let-binding with a wildcard name allows the program to pass the
+redundancy checker. Now the program compiles. We run and then:
+
+Nothing.
+
+The program does not print anything. The problem is that the whole-program
+optimizer has identifed that the expression `dprintln` is unused and can be
+removed. This is good! We want to optimizer to remove dead code, especially in
+combination with inlining. But its now what we wanted here. 
+
+At this point, we might think, can we not have the optimizer know about `dprintln` and treat it 
+specially? Unfortunately this does not work either. Imagine if we have:
+
+```flix
+def sum(x: Int32, y: Int32): Int32 =
+    def foo() = { Debug.dprintln("The sum of ${x} and ${y} is ${result}")}; 
+    foo();
+    x + y
+```
+
+Now we have to track `dprintln` through function calls. In other words, we would have to 
+reimplement part of the effect system, just purely and adhoc. This does not work.
+
+Back to the drawing board.
 
 # Print-Debugging - Attempt #2
 
