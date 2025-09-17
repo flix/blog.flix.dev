@@ -139,5 +139,30 @@ assert_eq!(b, 5);
 The macro has access to the syntax tree, so not only can it print the file name,
 the line, and the column offset, it can also print its expression. Beautiful!
 Flix does not (yet?) have macros. And in any case, we would not add them for a
-single feature like this. Nevertheless, is there something we can do?
+single feature like this. 
 
+Nevertheless, we can get some of this functionality. Introducing **debug string
+interpolators**. In all its simplicitly, we can write:
+
+```flix
+use Debug.dprintln
+
+def main(): Unit \ IO = 
+    let result = sum(123, 456);
+    println("The sum is: ${result}")
+
+def sum(x: Int32, y: Int32): Int32 = 
+    dprintln(d"x = ${x}, y = ${y}");
+    x + y
+```
+
+Notice the string literal: `d"x = ${x}, y = ${y}"`. Running this program prints:
+
+```sh
+[/Users/.../flix/Main.flix:8] x = 123, y = 456                         
+The sum is: 579
+```
+
+We get the file name and line number for the small cost of a single `d`. 
+
+Until next time, happy hacking.
