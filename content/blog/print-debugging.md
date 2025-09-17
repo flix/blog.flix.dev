@@ -30,8 +30,8 @@ To understand why, let us look at how the Flix compiler uses effects:
   propagation** -- that is moving let-bindings and statements around. Hence
   changing the order of execution. 
 
-- Flix relies on the effect system to separate control-pure and control-impure
-  code to support effect handlers. In particular, control-pure code (i.e. code
+- Flix relies on the effect system to *separate control-pure and control-impure
+  code* to support effect handlers. In particular, control-pure code (i.e. code
   that does not trigger an effect) is compiled to code without support for
   capturing the current deliminated continuation. 
 
@@ -45,7 +45,43 @@ def add(x: Int32, y: Int32): Int32 \ { } = x + y
 ```
 
 We -- the Flix language designers -- are extremely paranoid about ensuring that
-the purity of the function is not a lie.
+the purity of the function is _not a lie._ But surely one little lie is okay,
+you say? As my mind turns to dark visions of unspeakable cosmic horror.
+
+## Enter Print Debugging
+
+A sunny fall day James was sitting in front of his computer. He had just read a
+blog post about the latest programming language -- Flix -- on a website called
+HackerNews. Eager to try it out, he downloaded the compiler, and typed in: 
+
+```flix
+def main(): Int32 \ IO = 
+    println("Hello World!");
+    sum()
+
+def sum(x: Int32, y: Int32): Int32 =
+    let result = x + y;
+    println("The sum of ${x} and ${y} is ${result}");
+    result
+```
+
+Running the Flix compiler, James was confronted with:
+
+```sh
+❌ -- Type Error --
+
+>> Unable to unify the effect formulas: 'IO' and 'Pure'.
+
+6 |> def sum(x: Int32, y: Int32): Int32 = ...
+```
+
+Dismayed -- and perhaps not knowing about the cosmic horrors lurking in the
+shadows -- James read a bit about effect systems and went back to HackerNews and
+wrote:
+
+> Ever tried adding a simple print statement for debugging purposes while coding
+> in effectful lang? compiler: "NNNOOOOO!!!! THIS IS AN ERROR; I WILL NEVER
+> COMPILE THIS NONSENSE YOU MUST SPECIFY CONSOLE EFFECT WAAARGH" 
 
 
 
@@ -63,10 +99,6 @@ In In this blog post, Lifting the veil from a PL designers point of view.
 
 Add some quotes from HackerNews
 
-
-> Ever tried adding a simple print statement for debugging purposes while coding
-> in effectful lang? compiler: "NNNOOOOO!!!! THIS IS AN ERROR; I WILL NEVER
-> COMPILE THIS NONSENSE YOU __MUST__ SPECIFY CONSOLE EFFECT WAAARGHH!11" 
 
 What we expect from a type system
 
