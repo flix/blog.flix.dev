@@ -23,21 +23,21 @@ But what happens when you lie to the **effect system**? Nothing good.
 
 To understand why, let us examine how the Flix compiler leverages the effect system:
 
-- **Dead code elimination:** Flix uses the effect system to identify
-  expressions, statements, and let-bindings that have no side effects and whose
-  results are not needed. The compiler removes such unused code which improves
-  runtime performance and reduces binary code size. 
+**Dead code elimination:** Flix uses the effect system to identify expressions,
+statements, and let-bindings that have no side effects and whose results are
+unused. The compiler removes such code, improving performance and reducing
+binary size.
 
-- **Inlining and value propagation:** Flix also relies on the effect system to
-  safely determine which let-bindings can be inlined without changing the
-  semantics of the program. Inlining and value propagation enable constant
-  folding and closure elimination to improve runtime performance. 
+**Inlining and value propagation:** Flix also uses the effect system to
+determine which let-bindings can be safely inlined without changing program
+semantics. This enables constant folding and closure elimination, further
+improving performance.
 
-- **Separating control-pure from control-impure code:** Flix supports algebraic
-  effects and handlers. Effect tracking distinguishes code that may trigger
-  effects from purely computational code. This separation is essential:
-  control-pure code is compiled without capturing the delimited continuation,
-  while control-impure code includes the machinery to reify the stack.
+**Separating control-pure from control-impure code:** Flix uses effect tracking
+to distinguish code that may trigger effects and handlers from purely
+computational code. Control-pure code is compiled without capturing the
+delimited continuation, while control-impure code includes the machinery
+required to reify the stack.
 
 These are scary program transformations!
 
