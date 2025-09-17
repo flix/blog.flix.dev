@@ -51,18 +51,22 @@ def add(x: Int32, y: Int32): Int32 \ { } = x + y
 We — the Flix language designers — are downright paranoid about ensuring that
 the effects of the function is not a lie. _But surely one little white lie is
 okay, you suggest, as you carelessly add that `unchecked_cast` to your program_,
-while I look on with dark visions of unspeakable cosmic horror.
+while I look on with dark visions of unspeakable cosmic horror. To be continued —
 
 ## Print Debugging
 
-A sunny fall day Jim was sitting in front of his computer. He had just read a
-blog post about the latest programming language — Flix — on a website called
-HackerNews. Eager to try it out, he downloaded the compiler, and typed in: 
+One beautiful autumn afternoon, Jim was sitting in front of his computer.
+Outside, the leaves were turning brilliant shades of orange, while inside, a
+freshly brewed cup of coffee sat beside him. He had just finished reading a blog
+post on HackerNews about a new programming language with a type and effect
+system: Flix.
+
+Intrigued, he downloaded the compiler and typed:
 
 ```flix
 def main(): Int32 \ IO = 
     println("Hello World!");
-    sum()
+    sum(123, 456)
 
 def sum(x: Int32, y: Int32): Int32 =
     let result = x + y;
@@ -80,17 +84,16 @@ Running the Flix compiler, Jim was confronted with:
 6 |> def sum(x: Int32, y: Int32): Int32 = ...
 ```
 
-Dismayed — and perhaps not knowing about the cosmic horrors lurking in the
-shadows — Jim read a bit about effect systems and then went back to
-HackerNews and wrote:
+Dismayed, Jim poked around a bit but couldn’t get the program to work.
+Frustrated, he returned to HackerNews and posted a comment:
 
 > Ever tried adding a simple print statement for debugging purposes while coding
-> in effectful lang? compiler: "NNNOOOOO!!!! THIS IS AN ERROR; I WILL NEVER
-> COMPILE THIS NONSENSE YOU MUST SPECIFY CONSOLE EFFECT WAAARGH" 
+> in effectful lang? compiler: "NNNOOOO!!!! THIS IS AN ERROR; I WILL NEVER
+> COMPILE THIS NONSENSE YOU MUST SPECIFY THE `CONSOLE` EFFECT WAAARGH" 
 
 ## Being a Programming Language Designer is Hard
 
-The art of being a programming language designer is facing difficult trade-offs: 
+Continued— The art of being a programming language designer is facing difficult trade-offs: 
 
 - Programmers expect ultra fast compilation times but also ultra deep compiler
   optimizations. ("The compiler is slow" vs. "Don't worry, the compiler will
