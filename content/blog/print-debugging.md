@@ -21,20 +21,23 @@ memory-safe language, we might not feel to bad about lying to the type system...
 
 But what happens when you lie to the **effect system**? Nothing good.
 
-To understand why, let explore how the Flix compiler uses effects:
+To understand why, let us examine how the Flix compiler leverages the effect system:
 
-- Flix relies on the effect system to perform **deadcode elimination** -- that
-  is the Flix compiler eliminates pure expressions whose results are not needed,
-  including entire let-bindings whose variables are unused.
+- **Dead code elimination:** Flix uses the effect system to identify
+  expressions, statements, and let-bindings that have no side effects and whose
+  results are not needed. The compiler removes such unused code which improves
+  runtime performance and reduces binary code size. 
 
-- Flix relies on the effect system to perform whole-program **inlining and value
-  propagation** -- that is moving let-bindings and statements around. Hence
-  changing the order of execution. 
+- **Inlining and value propagation:** Flix also relies on the effect system to
+  safely determine which let-bindings can be inlined without changing the
+  semantics of the program. Inlining and value propagation enable constant
+  folding and closure elimination to improve runtime performance. 
 
-- Flix relies on the effect system to *separate control-pure and control-impure
-  code* to support effect handlers. In particular, control-pure code (i.e. code
-  that does not trigger an effect) is compiled to code without support for
-  capturing the current delimited continuation. 
+- **Separating control-pure from control-impure code:** Flix supports algebraic
+  effects and handlers. Effect tracking distinguishes code that may trigger
+  effects from purely computational code. This separation is essential:
+  control-pure code is compiled without capturing the delimited continuation,
+  while control-impure code includes the machinery to reify the stack.
 
 These are scary program transformations!
 
