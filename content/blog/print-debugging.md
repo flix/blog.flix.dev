@@ -48,7 +48,7 @@ We -- the Flix language designers -- are extremely paranoid about ensuring that
 the purity of the function is _not a lie._ But surely one little lie is okay,
 you say? As my mind turns to dark visions of unspeakable cosmic horror.
 
-## Enter Print Debugging
+## Print Debugging
 
 A sunny fall day James was sitting in front of his computer. He had just read a
 blog post about the latest programming language -- Flix -- on a website called
@@ -76,63 +76,36 @@ Running the Flix compiler, James was confronted with:
 ```
 
 Dismayed -- and perhaps not knowing about the cosmic horrors lurking in the
-shadows -- James read a bit about effect systems and went back to HackerNews and
-wrote:
+shadows -- James read a bit about effect systems and then went back to
+HackerNews and wrote:
 
 > Ever tried adding a simple print statement for debugging purposes while coding
 > in effectful lang? compiler: "NNNOOOOO!!!! THIS IS AN ERROR; I WILL NEVER
 > COMPILE THIS NONSENSE YOU MUST SPECIFY CONSOLE EFFECT WAAARGH" 
 
+## Being a Programming Language Designer is Hard
+
+The art of being a programming language designer is facing difficult trade-offs: 
+
+- Programmers expect ultra fast compilation times but also ultra deep compiler
+  optimizations. ("The compiler is slow" vs. "Don't worry, the compiler will
+  optimize that.")
+
+- Programmers expect expressive type systems, but also high quality error
+  messages. ("What do you mean a skolem variable escapes???")
+
+- Programmers expect type inference, but also high quality error messages.
+  ("What do you mean you cannot unify these types???")
+  
+- Programmers expect escape hatches for everything. But they must never, ever
+  break anything anywhere, ever. ("What do you mean turning off the fuel for the
+  engines crashes the plane? I thought this was a safe aircraft!")
+
+# Print-Debugging, Take One
+
 
 
 <div class="hljs-deletion">
-
-
-PL designer painful tradeoffs:
-- Ultra fast compiler vs ultra deep optimization
--Ultra expressive type systems vs. inference
--Ultra expressive type systems vs. error messages
-- Escape hatches vs. everytbhing.
-
-Part of being a programming language designer is making difficult trade-offs.
-In In this blog post, Lifting the veil from a PL designers point of view.
-
-Add some quotes from HackerNews
-
-
-What we expect from a type system
-
-What we expect from an effect system
-
-The first lie:
-
-```flix
-
-```
-
-We can use it 
-
-
-```flix
-...
-
-```
-
-The problem with lies is not the lie itself, it is its consequences.
-
-The optimizer wrecks havoc
-
-Fixing it with more lies:
-
-```
-intrododucing a local variable
-```
-
-
-```
-forcing the argument to pass through
-```
-
 
 # A better solution, flix style
 
