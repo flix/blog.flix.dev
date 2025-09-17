@@ -12,15 +12,16 @@ tags = ["effects", "language-design", "flix"]
 
 — Valery Legasov (*Jared Harris, Chernobyl 2019*)
 
-Every lie we tell to a **type system** incurs a debt that sooner or later must
-be paid. For memory-safe programming languages that debt is typically a runtime
-type error (e.g. a `ClassCastException`, a `TypeError: foo is not a function`,
-and so). For memory-unsafe languages that debt is typically memory corruption
-(e.g. a `segmentation fault` or arbitrary code execution). 
+Lying to a **type system works** the same way: the truth eventually comes due.
+In memory-safe languages, that usually means an runtime error (e.g. a
+`ClassCastException`, a `TypeError: foo is not a function`, and so on). In
+memory-unsafe languages, the consequences can be more dire: corrupted data,
+segmentation faults, or arbitrary code execution. Nevertheless, if we are in a
+memory-safe language, we might not feel to bad about lying to the type system...
 
-But what happens when you lie to the **effect system**? Nothing good...
+But what happens when you lie to the **effect system**? Nothing good.
 
-To understand why, let us look at how the Flix compiler uses effects:
+To understand why, let explore how the Flix compiler uses effects:
 
 - Flix relies on the effect system to perform **deadcode elimination** -- that
   is the Flix compiler eliminates pure expressions whose results are not needed,
