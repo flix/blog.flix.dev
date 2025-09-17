@@ -101,6 +101,8 @@ The art of being a programming language designer is facing difficult trade-offs:
   break anything anywhere, ever. ("What do you mean turning off the fuel for the
   engines crashes the plane? I thought this was a safe aircraft!")
 
+Despite being 
+
 # Print-Debugging, Attempt #1
 
 We are, in fact, not academics 
