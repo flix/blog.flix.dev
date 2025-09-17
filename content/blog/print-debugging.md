@@ -93,25 +93,22 @@ Frustrated, he returned to HackerNews and posted a comment:
 
 ## Being a Programming Language Designer is Hard
 
-Continued— The art of being a programming language designer is facing difficult trade-offs: 
+Continued— <br/>
+The art programming language design is to balance contradictory requirements:
+- Programmers expect lightning-fast compilation, but also deep, aggressive
+  compiler optimizations. ("the compiler is too slow!" vs. "surely the compiler
+  will optimize that away!")
+- Programmers want expressive type systems, but also intuitive and helpful error
+  messages. ("What do you mean a skolem variable escapes its scope???")
+- Programmers want type inference, but also simple type error messages ("What do
+  you mean you can't unify these types?")
+- Programmers want escape hatches for everything, but nothing must ever break.
+  ("What do you mean turning off the fuel for the engines crashes the plane? I
+  thought you said this was a safe airplane?!")
 
-- Programmers expect ultra fast compilation times but also ultra deep compiler
-  optimizations. ("The compiler is slow" vs. "Don't worry, the compiler will
-  optimize that.")
-
-- Programmers expect expressive type systems, but also high quality error
-  messages. ("What do you mean a skolem variable escapes???")
-
-- Programmers expect type inference, but also high quality error messages.
-  ("What do you mean you cannot unify these types???")
-  
-- Programmers expect escape hatches for everything. But they must never, ever
-  break anything anywhere, ever. ("What do you mean turning off the fuel for the
-  engines crashes the plane? I thought this was a safe aircraft!")
-
-We may be academics, but we are trying to build a real programming language, so
-we have to be receptive to feedback. So in that spirit, let us try to support
-print debugging: 
+Returning to earth: we may be academics, but **we are trying to build a real
+programming language. That means listening to our users—and that means
+supporting print debugging.** The question is: how??
 
 # Print-Debugging — Attempt #1
 
