@@ -202,7 +202,30 @@ effect system will precisely track the effect through the entire function body
 precisely, including through function calls, pipelines, closures, etc. etc. 
 
 Now in some sense we are back where we started, because now we get an error 
-that our type and effect signature of `sum` lacks the `Debug` effect.
+that our type and effect signature of `sum` lacks the `Debug` effect. But now we
+attack the problem from a different angle. We allow the expression body of a 
+function to have the `Debug` effect even if it does not appear in its signature!
+
+The upshot is that we can use `dprintln` anywhere inside a function and it will
+work correctly. In particular, we can be sure that the compiler will neither move
+the expression that prints nor eliminates it. 
+
+However, we have not fully solved the problem. By allowing a function to have
+the `Debug` effect internally, but not externally, it means that a call to a
+pure function could still be moved or omitted. But in some sense this is OK.
+We debugging we want to debug the program as it will actually execute.
+If an entire function call can be eliminated then we would not expect it to print. 
+
+The last detail that remains is that a lying type and effect system is not great.
+Hence, while we allow functions "omit" the `Debug` effect, we only allow this
+when a program is compiled in development mode. Under production mode, 
+the `Debug` effect cannot be hidden. It must be surfaced. Thus this pragmatic
+proposal has many desirable properties:
+
+- We can use `dprintln` for print debugging without too much thpught. It will just work out of the box.
+- We do have to remember that if an entire function is pure then it may be moved or eliminated by the opti,mizer,
+but this refects runtime beahavior anyway.
+- Finally, in release mode the type and effect system does not lie.
 
 # Look Ma': No Macros!
 
