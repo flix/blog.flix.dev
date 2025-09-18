@@ -128,7 +128,7 @@ type `a` provided that there is a `ToString` instance for it.
 While our special `dprintln` function type and effect checks, it does not work
 well.
 
-If we try to use it like this:
+If we attempt to use it as follows:
 
 ```flix
 def sum(x: Int32, y: Int32): Int32 =
@@ -149,10 +149,12 @@ The Flix compiler rejects our program with the error:
              useless expression.
 ```
 
-The Flix compiler has — quite correctly — identified that the `dprintln`
-expression is useless. It has no side-effect and its result is unused, hence it
-can be removed. Under normal circumstances this is definitely a bug, but here it
-is our intention. We can try to get around the problem with another trick:
+The compiler _correctly_ reports that `dprintln` is a useless expression: it has
+no observable effects and its result is ignored. This redundancy check is
+normally helpful for catching bugs, but in this case it prevents our use of
+`dprintln`.
+
+We can try to work around this check with a small trick:
 
 ```flix
 def sum(x: Int32, y: Int32): Int32 =
@@ -161,15 +163,15 @@ def sum(x: Int32, y: Int32): Int32 =
     result
 ```
 
-Using a let-binding with a wildcard name allows the program to pass the
-redundancy checker. Now the program compiles. We run and then:
+By introducing a let binding with a wildcard name, the redundancy checker is
+satisfied and the program now compiles. We can now run the program.
 
-Nothing.
+And it prints ... Nothing!
 
-The program does not print anything. The problem is that the whole-program
-optimizer has identified that the expression `dprintln` is unused and can be
-removed. This is good! We want to optimizer to remove dead code, especially in
-combination with inlining. But it's not what we wanted here. 
+The problem is that the whole-program optimizer has identified that the
+expression `dprintln` is unused and can be removed. This is good! We want to
+optimizer to remove dead code, especially in combination with inlining. But it's
+not what we wanted here. 
 
 At this point, we might think, can we not have the optimizer know about `dprintln` and treat it 
 specially? Unfortunately this does not work either. Imagine if we have:
@@ -186,7 +188,7 @@ reimplement part of the effect system, just purely and adhoc. This does not work
 
 Back to the drawing board.
 
-# Print-Debugging — Fixed
+# Print-Debugging — Attempt #2
 
 We are kind of stuck. We want to lie to the effect system, but in doing so, we
 wreck havoc on the entire system. We need a better lie. Or rather a more
