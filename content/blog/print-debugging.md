@@ -234,7 +234,7 @@ but this reflects runtime behavior anyway.
 
 # Addendum: Look Ma: No Macros!
 
-Rust has a beautiful [`dbg!` macro](https://doc.rust-lang.org/std/macro.dbg.html). It works something like this:
+Rust has a beautiful [`dbg!` macro](https://doc.rust-lang.org/std/macro.dbg.html) which works like this: 
 
 ```rust
 let a = 2;
@@ -243,13 +243,12 @@ let b = dbg!(a * 2) + 1;
 assert_eq!(b, 5);
 ```
 
-The macro has access to the syntax tree, so not only can it print the file name,
-the line, and the column offset, it can also print its expression. Beautiful!
-Flix does not (yet?) have macros. And in any case, we would not add them for a
-single feature like this. 
+Since the macro has access to the syntax tree, it can print the file name, line,
+column, and the original expression. Flix does not currently support macros (and
+we would not introduce them solely for this purpose). However, we can achieve
+part of this functionality using a **debug string interpolator**. 
 
-Nevertheless, we can get some of this functionality. Introducing **debug string
-interpolators**. In all its simplicity, we can write:
+For example, we can write:
 
 ```flix
 use Debug.dprintln
@@ -263,10 +262,12 @@ def sum(x: Int32, y: Int32): Int32 =
     x + y
 ```
 
-Notice the string literal: `d"x = ${x}, y = ${y}"`. Running this program prints:
+Note the debug string interpolator `d"x = ${x}, y = ${y}"`. 
+
+Running the program prints:
 
 ```sh
-[/Users/.../flix/Main.flix:8] x = 123, y = 456                         
+[Main.flix:8] x = 123, y = 456                         
 The sum is: 579
 ```
 
