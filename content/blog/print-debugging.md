@@ -108,11 +108,11 @@ The art programming language design is to balance contradictory requirements:
 
 Returning to earth: we may be academics, but **we are trying to build a real
 programming language. That means listening to our users—and that means
-supporting print debugging.** The question is: how??
+supporting print debugging.** The question is how??
 
 # Print-Debugging — Attempt #1
 
-We introduce a special `dprintln` function: 
+Consider if we introduce a special `dprintln` function:
 
 ```flix
 mod Debug {
@@ -121,11 +121,14 @@ mod Debug {
 }
 ```
 
-We use an `unchecked_cast` to ignore the `IO` effect of the `println` function.
-We also accept any argument of type `a` as long as it has a `ToString[a]`
-instance. 
+Here we use an `unchecked_cast` to discard the `IO` effect of `println`. That
+is, we _lie_ to the effect system. We allow `dprintln` to accept any argument of
+type `a` provided that there is a `ToString` instance for it. 
 
-Unfortunately, our function does not work so well. If we write:
+While our special `dprintln` function type and effect checks, it does not work
+well.
+
+If we try to use it like this:
 
 ```flix
 def sum(x: Int32, y: Int32): Int32 =
