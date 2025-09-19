@@ -13,11 +13,11 @@ tags = ["effects", "language-design", "flix"]
 — Valery Legasov (*Jared Harris, Chernobyl 2019*)
 
 Lying to a **type system works** the same way: the truth eventually comes due.
-In memory-safe languages, that usually means an runtime error (e.g. a
+In memory-safe languages, that usually means a runtime error (e.g. a
 `ClassCastException`, a `TypeError: foo is not a function`, and so on). In
 memory-unsafe languages, the consequences can be more dire: corrupted data,
 segmentation faults, or arbitrary code execution. Nevertheless, if we are in a
-memory-safe language, we might not feel to bad about lying to the type system...
+memory-safe language, we might not feel too bad about lying to the type system...
 
 But what happens when you lie to the **effect system**? Nothing good.
 
@@ -54,7 +54,7 @@ def add(x: Int32, y: Int32): Int32 \ { } = x + y
 ```
 
 We — the Flix language designers — are downright paranoid about ensuring that
-the effects of the function is not a lie. _But surely one little white lie is
+the effects of the function are not a lie. _But surely one little white lie is
 okay, you suggest, as you carelessly add that `unchecked_cast` to your program_,
 while I look on with dark visions of unspeakable cosmic horror. To be continued —
 
@@ -99,7 +99,7 @@ Frustrated, he returned to HackerNews and posted a comment:
 ## Being a Programming Language Designer is Hard
 
 Continued— <br/>
-The art programming language design is to balance contradictory requirements:
+The art of programming language design is to balance contradictory requirements:
 - Programmers expect lightning-fast compilation, but also deep, aggressive
   compiler optimizations. ("the compiler is too slow!" vs. "surely the compiler
   will optimize that away!")
@@ -171,7 +171,7 @@ def sum(x: Int32, y: Int32): Int32 =
 By introducing a let binding with a wildcard name, the redundancy checker is
 satisfied and the program now compiles.
 
-However, when we run the porgram... Nothing is printed!
+However, when we run the program... Nothing is printed!
 
 Now, the optimizer detects that the let-bound expression has no side effects and
 that its variable is unused, so it removes it. Normally this is desirable, we
