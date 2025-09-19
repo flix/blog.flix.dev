@@ -113,9 +113,9 @@ The art of programming language design is balancing contradictory requirements:
 
 Returning to earth: we may be academics, but **we are trying to build a real
 programming language. That means listening to our users—and that means
-supporting print debugging.** The question is how??
+supporting print debugging.** The question is how?
 
-# Print-Debugging — Attempt #1
+## Print-Debugging — Attempt #1
 
 Consider if we introduce a special `dprintln` function:
 
@@ -197,7 +197,7 @@ It seems we are stuck. It seems there are two paths forward:
 
 Neither option is really palatable. 
 
-# Print-Debugging — Attempt #2
+## Print-Debugging — Attempt #2
 
 What we need is a better lie: one with a different set of trade-offs.
 
@@ -270,7 +270,7 @@ when the compiler is run in production mode, we disable the lie that allows the
 implicit `Debug` effect. As a result, using `dprintln` in production mode causes
 a compilation error. 
 
-# Addendum: Look Ma: No Macros!
+## Addendum: Look Ma: No Macros!
 
 Rust has a beautiful [`dbg!` macro](https://doc.rust-lang.org/std/macro.dbg.html) which works like this: 
 
