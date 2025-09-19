@@ -177,7 +177,7 @@ Now, the optimizer detects that the let-bound expression has no side effects and
 that its variable is unused, so it removes it. Normally this is desirable, we
 want the optimizer to eliminate dead code, but here it gets in our way.
 
-It seems we are stuck. Here it would seem there are two paths forward:
+It seems we are stuck. It seems there are two paths forward:
 
 - We could try to equip the optimizer with knowledge of print debugging
   statements. In that case, we would track these "effects-that-are-not-effects"
@@ -192,22 +192,28 @@ It seems we are stuck. Here it would seem there are two paths forward:
   performance, (b) somewhat surprisingly, it would also make the Flix compiler
   itself run _slower_, since dead code elimination and other optimizations
   actually speed up the backend, and (c) it would be fertile ground for compiler
-  bugs, because instead of one battle-tested compiler pipeline, there would
-  effectively be two pipelines that must nevertheless agree on program
-  semantics.
+  bugs, because instead of one battle-tested compiler pipeline, there would two
+  pipelines that must agree on program semantics.
 
-Neither option is palatable.
+Neither option is really palatable. 
 
 # Print-Debugging — Attempt #2
 
-We are kind of stuck. We want to lie to the effect system, but in doing so, we
-wreck havoc on the entire system. We need a better lie. Or rather a more
-pragmatic approach. 
+What we need is a better lie: one with a different set of trade-offs.
 
-We have been going against the grain of type and effect system by lying about
-the purity of `dprintln`. Well, what if we did not? We could let `dprintln` have
-a new special effect — call it `Debug`. In our function we let the `Debug`
-effect propagate. 
+We introduce a `Debug` effect and use it for `dprintln`:
+
+```flix
+eff Debug { /* empty -- marker effect */ }
+
+mod Debug {
+    pub def dprintln(x: a): Unit \ Debug with ToString[a] = ...
+}
+```
+
+We no longer lie about `dprintln`. Calling it now has the `Debug` effect.
+
+We can use it to debug our `sum` function from earlier:
 
 ```flix
 def sum(x: Int32, y: Int32): Int32 =
@@ -216,15 +222,15 @@ def sum(x: Int32, y: Int32): Int32 =
     result
 ```
 
-What happens now is that the expression, the statement-expression, and
-ultimately the let-binding all get the `Debug` effect. In fact, the type and
-effect system will precisely track the effect through the entire function body
-precisely, including through function calls, pipelines, closures, etc. etc. 
+The implementation of `sum` is let-expression whose body is a
+statement-expression. Because of the call to `dprintln`, the inferred effect of
+both is `Debug`.
 
-Now in some sense we are back where we started, because now we get an error 
-that our type and effect signature of `sum` lacks the `Debug` effect. But now we
-attack the problem from a different angle. We allow the expression body of a 
-function to have the `Debug` effect even if it does not appear in its signature!
+The `Debug` effect is incompatible with `sum` being declared as pure (i.e.
+having the empty effect set). 
+
+<div class="hljs-deletion ">
+
 
 The upshot is that we can use `dprintln` anywhere inside a function and it will
 work correctly. In particular, we can be sure that the compiler will neither move
@@ -236,16 +242,20 @@ pure function could still be moved or omitted. But in some sense this is OK.
 When debugging we want to debug the program as it will actually execute.
 If an entire function call can be eliminated then we would not expect it to print. 
 
-The last detail that remains is that a lying type and effect system is not great.
-Hence, while we allow functions "omit" the `Debug` effect, we only allow this
-when a program is compiled in development mode. Under production mode, 
-the `Debug` effect cannot be hidden. It must be surfaced. Thus this pragmatic
-proposal has many desirable properties:
-
+ Thus this pragmatic proposal has many desirable properties:
 - We can use `dprintln` for print debugging without too much thought. It will just work out of the box.
 - We do have to remember that if an entire function is pure then it may be moved or eliminated by the optimizer,
 but this reflects runtime behavior anyway.
-- Finally, in release mode the type and effect system does not lie.
+
+We can improve our system a bit: The last detail that remains is that a lying
+type and effect system is not great. Hence, while we allow functions "omit" the
+`Debug` effect, we only allow this when a program is compiled in development
+mode. Under production mode, the `Debug` effect cannot be hidden. It must be
+surfaced.
+
+</div>
+
+**Development vs. Production Mode.**  
 
 # Addendum: Look Ma: No Macros!
 
