@@ -12,12 +12,13 @@ tags = ["effects", "language-design", "flix"]
 
 — Valery Legasov (*Jared Harris, Chernobyl 2019*)
 
-Lying to a **type system works** the same way: the truth eventually comes due.
+Lying to a **type system** works the same way: the truth eventually comes out.
 In memory-safe languages, that usually means a runtime error (e.g. a
 `ClassCastException`, a `TypeError: foo is not a function`, and so on). In
 memory-unsafe languages, the consequences can be more dire: corrupted data,
 segmentation faults, or arbitrary code execution. Nevertheless, if we are in a
-memory-safe language, we might not feel too bad about lying to the type system...
+memory-safe language, we might not feel too bad about lying to the type
+system...
 
 But what happens when you lie to the **effect system**? Nothing good.
 
@@ -35,7 +36,7 @@ improving performance.
 
 **Automatic parallelization:** The Flix compiler, in cooperation with the Flix
 Standard Library, automatically parallelizes a selected set of higher-order
-functions when their arguments are pure and parallel evaluation preserves
+functions when their arguments are pure, and when parallel evaluation preserves
 program semantics.
 
 **Separating control-pure from control-impure code:** Flix uses effect tracking
@@ -55,8 +56,9 @@ def add(x: Int32, y: Int32): Int32 \ { } = x + y
 
 We — the Flix language designers — are downright paranoid about ensuring that
 the effects of the function are not a lie. _But surely one little white lie is
-okay, you suggest, as you carelessly add that `unchecked_cast` to your program_,
-while I look on with dark visions of unspeakable cosmic horror. To be continued —
+okay_, you suggest, as you carelessly add that `unchecked_cast` to your program,
+while I look on with dark visions of unspeakable cosmic horror. To be
+continued...
 
 ## Print Debugging
 
@@ -98,7 +100,7 @@ Frustrated, he returned to HackerNews and posted a comment:
 
 ## Being a Programming Language Designer is Hard
 
-Continued— <br/>
+... Continued <br/>
 The art of programming language design is balancing contradictory requirements:
 - Programmers expect lightning-fast compilation, but also deep, aggressive
   compiler optimizations. ("the compiler is too slow!" vs. "surely the compiler
@@ -113,7 +115,7 @@ The art of programming language design is balancing contradictory requirements:
 
 Returning to earth: we may be academics, but **we are trying to build a real
 programming language. That means listening to our users—and that means
-supporting print debugging.** The question is how?
+supporting print debugging.** The question is _how_?
 
 ## Print-Debugging — Attempt #1
 
@@ -171,10 +173,10 @@ def sum(x: Int32, y: Int32): Int32 =
 By introducing a let binding with a wildcard name, the redundancy checker is
 satisfied and the program now compiles.
 
-However, when we run the program... Nothing is printed!
+However, when we run the program... nothing is printed!
 
 Now, the optimizer detects that the let-bound expression has no side effects and
-that its variable is unused, so it removes it. Normally this is desirable, we
+that its variable is unused, so it removes it. Normally this is desirable; we
 want the optimizer to eliminate dead code, but here it gets in our way.
 
 It seems we are stuck. It seems there are two paths forward:
