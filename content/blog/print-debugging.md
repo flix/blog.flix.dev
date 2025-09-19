@@ -196,6 +196,8 @@ It seems we are stuck. Here it would seem there are two paths forward:
   effectively be two pipelines that must nevertheless agree on program
   semantics.
 
+Neither option is palatable.
+
 # Print-Debugging — Attempt #2
 
 We are kind of stuck. We want to lie to the effect system, but in doing so, we
