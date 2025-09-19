@@ -164,17 +164,17 @@ def sum(x: Int32, y: Int32): Int32 =
 ```
 
 By introducing a let binding with a wildcard name, the redundancy checker is
-satisfied and the program now compiles. We can now run the program.
+satisfied and the program now compiles.
 
-And it prints ... Nothing!
+However, when we run the porgram... Nothing is printed!
 
-The problem is that the whole-program optimizer has identified that the
-expression `dprintln` is unused and can be removed. This is good! We want to
-optimizer to remove dead code, especially in combination with inlining. But it's
-not what we wanted here. 
+The optimizer detects that the let-bound expression has no side effects and that
+its variable is unused, so it removes it. Normally this is desirable, we want
+the optimizer to eliminate dead code, but here it gets in our way.
 
-At this point, we might think, can we not have the optimizer know about `dprintln` and treat it 
-specially? Unfortunately this does not work either. Imagine if we have:
+At this point, we might think, can we not have the optimizer know about
+`dprintln` and treat it specially? Unfortunately this does not work either.
+Imagine if we have:
 
 ```flix
 def sum(x: Int32, y: Int32): Int32 =
