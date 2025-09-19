@@ -255,7 +255,10 @@ surfaced.
 
 </div>
 
-**Development vs. Production Mode.**  
+**Development vs. Production Mode.** We don’t want published packages to (a) lie
+to the type and effect system, or (b) contain print debugging statements.
+Therefore, when the Flix compiler is run in production mode, it rejects programs
+that use `Debug`.
 
 # Addendum: Look Ma: No Macros!
 
