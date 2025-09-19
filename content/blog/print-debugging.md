@@ -256,9 +256,10 @@ surfaced.
 </div>
 
 **Development vs. Production Mode.** We don’t want published packages to (a) lie
-to the type and effect system, or (b) contain print debugging statements.
-Therefore, when the Flix compiler is run in production mode, it rejects programs
-that use `Debug`.
+to the type and effect system, or (b) contain print debugging statements. Hence,
+when the compiler is run in production mode, we disable the lie that allows the
+implicit `Debug` effect. As a result, using `dprintln` in production mode causes
+a compilation error. 
 
 # Addendum: Look Ma: No Macros!
 
