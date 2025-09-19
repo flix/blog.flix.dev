@@ -33,6 +33,11 @@ determine which let-bindings can be safely inlined without changing program
 semantics. This enables constant folding and closure elimination, further
 improving performance.
 
+**Automatic parallelization:** The Flix compiler, in cooperation with the Flix
+Standard Library, automatically parallelizes a selected set of higher-order
+functions when their arguments are pure and parallel evaluation preserves
+program semantics.
+
 **Separating control-pure from control-impure code:** Flix uses effect tracking
 to distinguish code that may trigger effects and handlers from purely
 computational code. Control-pure code is compiled without capturing the
@@ -168,25 +173,28 @@ satisfied and the program now compiles.
 
 However, when we run the porgram... Nothing is printed!
 
-The optimizer detects that the let-bound expression has no side effects and that
-its variable is unused, so it removes it. Normally this is desirable, we want
-the optimizer to eliminate dead code, but here it gets in our way.
+Now, the optimizer detects that the let-bound expression has no side effects and
+that its variable is unused, so it removes it. Normally this is desirable, we
+want the optimizer to eliminate dead code, but here it gets in our way.
 
-At this point, we might think, can we not have the optimizer know about
-`dprintln` and treat it specially? Unfortunately this does not work either.
-Imagine if we have:
+It seems we are stuck. Here it would seem there are two paths forward:
 
-```flix
-def sum(x: Int32, y: Int32): Int32 =
-    def foo() = { Debug.dprintln("The sum of ${x} and ${y} is ${result}")}; 
-    foo();
-    x + y
-```
+- We could try to equip the optimizer with knowledge of print debugging
+  statements. In that case, we would track these "effects-that-are-not-effects"
+  and avoid treating them as pure expressions. The problem with this approach is
+  that it would have to handle the entire language—e.g., lambda expressions,
+  higher-order functions, and polymorphism. In effect (no pun intended), we
+  would essentially be re-implementing an ad hoc effect system inside the
+  optimizer.
 
-Now we have to track `dprintln` through function calls. In other words, we would have to 
-reimplement part of the effect system, just purely and adhoc. This does not work.
-
-Back to the drawing board.
+- We could decide to _disable_ the optimizer during development. The problem
+  with that is threefold: (a) it would cause a massive slowdown in runtime
+  performance, (b) somewhat surprisingly, it would also make the Flix compiler
+  itself run _slower_, since dead code elimination and other optimizations
+  actually speed up the backend, and (c) it would be fertile ground for compiler
+  bugs, because instead of one battle-tested compiler pipeline, there would
+  effectively be two pipelines that must nevertheless agree on program
+  semantics.
 
 # Print-Debugging — Attempt #2
 
