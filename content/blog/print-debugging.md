@@ -226,32 +226,46 @@ The implementation of `sum` is let-expression whose body is a
 statement-expression. Because of the call to `dprintln`, the inferred effect of
 both is `Debug`.
 
-The `Debug` effect is incompatible with `sum` being declared as pure (i.e.
-having the empty effect set). 
+We are now back to the original problem: The `Debug` effect is incompatible with
+the declared type and effect signature of `sum` (i.e., `sum` having the empty
+effect set). However, instead of changing the signature of `dprintln` or  `sum`,
+**we will change the _effect system_ to allow the absence of the `Debug`
+effect**. 
+
+When a programmer writes a type and effect signature like: 
+
+```flix
+def downloadUrl(x: Int32): Unit \ {FileWrite, Http} = exp
+````
+
+We first check if `exp` can be type-checked with the signature: 
+
+`Int32 -> Unit \ {FileWrite, Http}`
+
+ If it cannot, we retry with the signature:
+ 
+`Int32 -> Unit \ {FileWrite, Http} + Debug`.
+
+If that works, we consider the function well-typed, but crucially we do _not_
+update the signature of `downloadUrl`. Consequently, everywhere `downloadUrl` is
+used, it is still typed as-if if it only has the `FileWrite` and `Http` effects. 
 
 <div class="hljs-deletion ">
 
 
 The upshot is that we can use `dprintln` anywhere inside a function and it will
-work correctly. In particular, we can be sure that the compiler will neither move
-the expression that prints nor eliminates it. 
-
-However, we have not fully solved the problem. By allowing a function to have
-the `Debug` effect internally, but not externally, it means that a call to a
-pure function could still be moved or omitted. But in some sense this is OK.
-When debugging we want to debug the program as it will actually execute.
-If an entire function call can be eliminated then we would not expect it to print. 
+work correctly. In particular, we can be sure that the compiler will neither
+move the expression that prints nor eliminates it. However, we have not fully
+solved the problem. By allowing a function to have the `Debug` effect
+internally, but not externally, it means that a call to a pure function could
+still be moved or omitted. But in some sense this is OK. When debugging we want
+to debug the program as it will actually execute. If an entire function call can
+be eliminated then we would not expect it to print. 
 
  Thus this pragmatic proposal has many desirable properties:
 - We can use `dprintln` for print debugging without too much thought. It will just work out of the box.
 - We do have to remember that if an entire function is pure then it may be moved or eliminated by the optimizer,
 but this reflects runtime behavior anyway.
-
-We can improve our system a bit: The last detail that remains is that a lying
-type and effect system is not great. Hence, while we allow functions "omit" the
-`Debug` effect, we only allow this when a program is compiled in development
-mode. Under production mode, the `Debug` effect cannot be hidden. It must be
-surfaced.
 
 </div>
 
