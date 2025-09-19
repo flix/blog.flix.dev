@@ -250,24 +250,19 @@ If that works, we consider the function well-typed, but crucially we do _not_
 update the signature of `downloadUrl`. Consequently, everywhere `downloadUrl` is
 used, it is still typed as-if if it only has the `FileWrite` and `Http` effects. 
 
-<div class="hljs-deletion ">
+The advantages of this implementation are:
+- We can use `dprintln` anywhere in a function and it just works.
+- We can add `dprintln` anywhere without having to change the signature of the
+  function nor the signatures of any callers. 
+- We can be sure that the optimizer will leave our `dprintln` calls intact. 
 
-
-The upshot is that we can use `dprintln` anywhere inside a function and it will
-work correctly. In particular, we can be sure that the compiler will neither
-move the expression that prints nor eliminates it. However, we have not fully
-solved the problem. By allowing a function to have the `Debug` effect
-internally, but not externally, it means that a call to a pure function could
-still be moved or omitted. But in some sense this is OK. When debugging we want
-to debug the program as it will actually execute. If an entire function call can
-be eliminated then we would not expect it to print. 
-
- Thus this pragmatic proposal has many desirable properties:
-- We can use `dprintln` for print debugging without too much thought. It will just work out of the box.
-- We do have to remember that if an entire function is pure then it may be moved or eliminated by the optimizer,
-but this reflects runtime behavior anyway.
-
-</div>
+There are two minor downsides. First, adding a `dprintln` marks an expression as
+impure, effectively disabling the optimizer for that expression and its parent
+expressions. Still, this is far less invasive than disabling the optimizer for
+the entire program. Second, because the `Debug` effect is hidden from the
+function’s signature, calls to that function inside other functions might be
+moved or even eliminated. On the bright side, this ensures that a `dprintln`
+only prints if the function is actually called!
 
 **Development vs. Production Mode.** We don’t want published packages to (a) lie
 to the type and effect system, or (b) contain print debugging statements. Hence,
