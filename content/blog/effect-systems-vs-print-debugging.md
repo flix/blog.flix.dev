@@ -192,7 +192,7 @@ It seems we are stuck. It seems there are two paths forward:
   performance, (b) somewhat surprisingly, it would also make the Flix compiler
   itself run _slower_, since dead code elimination and other optimizations
   actually speed up the backend, and (c) it would be fertile ground for compiler
-  bugs, because instead of one battle-tested compiler pipeline, there would two
+  bugs, because instead of one battle-tested compiler pipeline, there would be two
   pipelines that must agree on program semantics.
 
 Neither option is really palatable. 
@@ -222,13 +222,13 @@ def sum(x: Int32, y: Int32): Int32 =
     result
 ```
 
-The implementation of `sum` is let-expression whose body is a
+The implementation of `sum` is a let-expression whose body is a
 statement-expression. Because of the call to `dprintln`, the inferred effect of
 both is `Debug`.
 
 We are now back to the original problem: The `Debug` effect is incompatible with
 the declared type and effect signature of `sum` (i.e., `sum` having the empty
-effect set). However, instead of changing the signature of `dprintln` or  `sum`,
+effect set). However, instead of changing the signature of `dprintln` or `sum`,
 **we will change the _effect system_ to allow the absence of the `Debug`
 effect**. 
 
@@ -236,7 +236,7 @@ When a programmer writes a type and effect signature like:
 
 ```flix
 def downloadUrl(x: Int32): Unit \ {FileWrite, Http} = exp
-````
+```
 
 We first check if `exp` can be type-checked with the signature: 
 
