@@ -99,7 +99,7 @@ Frustrated, he returned to HackerNews and posted a comment:
 ## Being a Programming Language Designer is Hard
 
 Continued— <br/>
-The art of programming language design is to balance contradictory requirements:
+The art of programming language design is balancing contradictory requirements:
 - Programmers expect lightning-fast compilation, but also deep, aggressive
   compiler optimizations. ("the compiler is too slow!" vs. "surely the compiler
   will optimize that away!")
@@ -244,11 +244,11 @@ We first check if `exp` can be type-checked with the signature:
 
  If it cannot, we retry with the signature:
  
-`Int32 -> Unit \ {FileWrite, Http} + Debug`.
+`Int32 -> Unit \ {FileWrite, Http} + Debug`
 
-If that works, we consider the function well-typed, but crucially we do _not_
+If that works, we consider the function well-typed, but crucially, we do _not_
 update the signature of `downloadUrl`. Consequently, everywhere `downloadUrl` is
-used, it is still typed as-if if it only has the `FileWrite` and `Http` effects. 
+used, it is still typed as if it only has the `FileWrite` and `Http` effects. 
 
 The advantages of this implementation are:
 - We can use `dprintln` anywhere in a function and it just works.
