@@ -17,11 +17,8 @@ menu = [
     { name = "blog", url = "blog", trailing_slash = true },
     { name = "tags", url = "tags", trailing_slash = true },
 ]
-stylesheets = ["highlight.css"]
-hljs = "highlight.js"
-hljs_sha = "066eac05c3c080528982298c064a8d9b265e8e5aa085649067c461ccb70fb0e8"
-hljs_activate = "highlight_activate.js"
-hljs_activate_sha = "239219aa70cd2b8765c57347d0b02e3faaf9d38267ee1bbd3392e193abcec502"
+stylesheets = ["highlight.css", "highlight_fix.css"]
+enable_csp = false
 
 [markdown]
-highlight_code = true
+highlight_code = false
