@@ -272,6 +272,9 @@ when the compiler is run in production mode, we disable the lie that allows the
 implicit `Debug` effect. As a result, using `dprintln` in production mode causes
 a compilation error. 
 
+> **Note:** The features described here have been merged in master, but not yet
+> released.
+
 ## Addendum: Look Ma: No Macros!
 
 Rust has a beautiful [`dbg!` macro](https://doc.rust-lang.org/std/macro.dbg.html) which works like this: 
