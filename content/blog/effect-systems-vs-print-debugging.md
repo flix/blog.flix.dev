@@ -13,7 +13,7 @@ tags = ["effects", "language-design", "flix"]
 — Valery Legasov (*Jared Harris, Chernobyl 2019*)
 
 Lying to a **type system** works the same way: the truth eventually comes out.
-In memory-safe languages, that usually means a runtime error (e.g. a
+In memory-safe languages, that usually means as a runtime error (e.g. a
 `ClassCastException`, a `TypeError: foo is not a function`, and so on). In
 memory-unsafe languages, the consequences can be more dire: corrupted data,
 segmentation faults, or arbitrary code execution. Nevertheless, if we are in a
@@ -22,7 +22,7 @@ system...
 
 But what happens when you lie to the **effect system**? Nothing good.
 
-To understand why, let us examine how the Flix compiler leverages the effect system:
+To understand why, let us examine how the Flix compiler uses the effect system:
 
 **Dead code elimination:** Flix uses the effect system to identify expressions,
 statements, and let-bindings that have no side effects and whose results are
@@ -31,8 +31,7 @@ binary size.
 
 **Inlining and value propagation:** Flix also uses the effect system to
 determine which let-bindings can be safely inlined without changing program
-semantics. This enables constant folding and closure elimination, further
-improving performance.
+semantics. This enables constant folding and closure elimination.
 
 **Automatic parallelization:** The Flix compiler, in cooperation with the Flix
 Standard Library, automatically parallelizes a selected set of higher-order
@@ -57,8 +56,9 @@ def add(x: Int32, y: Int32): Int32 \ { } = x + y
 We — the Flix language designers — are downright paranoid about ensuring that
 the effects of the function are not a lie. _But surely one little white lie is
 okay_, you suggest, as you carelessly add that `unchecked_cast` to your program,
-while I look on with dark visions of unspeakable cosmic horror. To be
-continued...
+while I look on with dark visions of unspeakable cosmic horror. 
+
+Interlude...
 
 ## Print Debugging
 
@@ -100,10 +100,10 @@ Frustrated, he returned to HackerNews and posted a comment:
 
 ## Being a Programming Language Designer is Hard
 
-... Continued <br/>
-The art of programming language design is balancing contradictory requirements:
+The art of programming language design is to balance contradictory requirements:
+
 - Programmers expect lightning-fast compilation, but also deep, aggressive
-  compiler optimizations. ("the compiler is too slow!" vs. "surely the compiler
+  compiler optimizations. ("The compiler is too slow!" vs. "Surely the compiler
   will optimize that away!")
 - Programmers want expressive type systems, but also intuitive and helpful error
   messages. ("What do you mean a skolem variable escapes its scope???")
@@ -114,12 +114,12 @@ The art of programming language design is balancing contradictory requirements:
   thought you said this was a safe airplane?!")
 
 Returning to earth: we may be academics, but **we are trying to build a real
-programming language. That means listening to our users—and that means
-supporting print debugging.** The question is _how_?
+programming language. That means listening to our users and that means
+we have to support print debugging.** The question is _how_?
 
 ## Print-Debugging — Attempt #1
 
-Consider if we introduce a special `dprintln` function:
+Consider if we introduce a special function:
 
 ```flix
 mod Debug {
@@ -129,8 +129,7 @@ mod Debug {
 ```
 
 Here we use an `unchecked_cast` to discard the `IO` effect of `println`. That
-is, we _lie_ to the effect system. We allow `dprintln` to accept any argument of
-type `a` provided that there is a `ToString` instance for it. 
+is, we _lie_ to the effect system.
 
 While our special `dprintln` function type and effect checks, it does not work
 well.
@@ -179,7 +178,7 @@ Now, the optimizer detects that the let-bound expression has no side effects and
 that its variable is unused, so it removes it. Normally this is desirable; we
 want the optimizer to eliminate dead code, but here it gets in our way.
 
-It seems we are stuck. It seems there are two paths forward:
+It seems we are stuck. There are two paths forward:
 
 - We could try to equip the optimizer with knowledge of print debugging
   statements. In that case, we would track these "effects-that-are-not-effects"
@@ -195,9 +194,9 @@ It seems we are stuck. It seems there are two paths forward:
   itself run _slower_, since dead code elimination and other optimizations
   actually speed up the backend, and (c) it would be fertile ground for compiler
   bugs, because instead of one battle-tested compiler pipeline, there would be two
-  pipelines that must agree on program semantics.
+  pipelines to develop and maintain.
 
-Neither option is really palatable. 
+Neither option is really acceptable to us. 
 
 ## Print-Debugging — Attempt #2
 
@@ -246,7 +245,7 @@ We first check if `exp` can be type-checked with the signature:
 
  If it cannot, we retry with the signature:
  
-`Int32 -> Unit \ {FileWrite, Http} + Debug`
+`Int32 -> Unit \ {FileWrite, Http, Debug}`
 
 If that works, we consider the function well-typed, but crucially, we do _not_
 update the signature of `downloadUrl`. Consequently, everywhere `downloadUrl` is
@@ -271,9 +270,6 @@ to the type and effect system, or (b) contain print debugging statements. Hence,
 when the compiler is run in production mode, we disable the lie that allows the
 implicit `Debug` effect. As a result, using `dprintln` in production mode causes
 a compilation error. 
-
-> **Note:** The features described here have been merged in master, but not yet
-> released.
 
 ## Addendum: Look Ma: No Macros!
 
@@ -315,5 +311,7 @@ The sum is: 579
 ```
 
 We get the file name and line number for the small cost of a single `d`. 
+
+That's all for now.
 
 Until next time, happy hacking.
