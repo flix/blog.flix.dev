@@ -299,11 +299,99 @@ Last error:
 
 ⏺ Good progress! Just one error left - String.split already returns a List, not a Vector. Let me fix that:
 
-And done!
+And done! The file is 336 lines of Flix code. 
 
 Lets try it:
 
 ```
 flix run 
 
+Welcome to Tic-Tac-Toe!                                                         
+======================
+Enter grid size (3-9):
+3
+
+Starting 3x3 game. You are X, AI is O.
+Get 3 in a row to win!
+
+   1 2 3
+1  . . .
+2  . . .
+3  . . .
+Your turn (X):
+Enter your move (row col), e.g., '1 2':
+1 2 
+   1 2 3
+1  . X .
+2  . . .
+3  . . .
+AI is thinking...
+AI plays at (3, 3)
+   1 2 3
+1  . X .
+2  . . .
+3  . . O
+
+... 
+
+   1 2 3
+1  X X O
+2  X X .
+3  O . O
+AI is thinking...
+AI plays at (3, 2)
+   1 2 3
+1  X X O
+2  X X .
+3  O O O
+Player O wins!
 ```
+
+And I lost! 
+
+The game_log file is there:
+
+```
+=== Tic-Tac-Toe Game Log ===
+X played at (1, 2)
+O played at (3, 3)
+X played at (1, 1)
+O played at (1, 3)
+X played at (2, 2)
+O played at (3, 1)
+X played at (2, 1)
+O played at (3, 2)
+```
+
+Lets return to the TODO list:
+
+- Defining custom Logger effect. What I wanted was to use the std lib Logger effect, but with a custom handler.
+- main entry point is not using run-with construct.
+
+Lets start with 1:
+
+```
+Refactor the code base to use the built-in Logger effect
+```
+
+Claude consults the Flix documentation again. 
+
+```
+I now understand the built-in Logger API. The refactoring involves:
+
+  1. Removing the custom GameLogger effect
+  2. Using Logger.info(message) instead of GameLogger.logMove(move)
+  3. Writing a custom handler for the built-in Logger that writes to file using FileWrite
+```
+
+
+
+
+
+
+
+Ingredients for success:
+
+- Docs
+- APIs
+- Runnable compiler with reasonable error messages. (Resiliency helps here.)
