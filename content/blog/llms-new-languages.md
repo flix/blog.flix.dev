@@ -30,3 +30,57 @@ TODO: Configure the compiler.
 TODO: We will use all of flixes features to challenge it.
 
 TicTacToe example
+
+We begin as follows:
+
+```sh
+mkdir tictactoe
+cd tictactoe
+flix init
+```
+
+We now download the Flix documentation and API. We could of course also access
+this material online, but downloading it makes subsequent uses faster:
+
+```sh
+mkdir -p docs
+cd docs/
+wget -r -np -k https://api.flix.dev/
+wget -r -np -k https://doc.flix.dev/
+```
+
+Running these commands takes less than a minute. (If you are following this blog
+post, ou have my personal permission to crawl our sites like this.)
+
+Next, we create a `CLAUDE.md` file with the following:
+
+```markdown
+# Overview
+
+This is project is written in the Flix programming language.
+
+## Documentation
+
+- **API Reference**: `docs/api.flix.dev/`
+- **Documentation**: `docs/doc.flix.dev/`
+
+## Flix Compiler Commands
+
+The `flix` compiler is available on PATH and supports the following commands:
+
+- `flix check` - Check code for errors
+- `flix run` - Run the project
+- `flix test` - Run tests
+
+## Effect System
+
+Flix has an effect system. Documentation is in `docs/doc.flix.dev/`:
+
+- `effect-system.html` - Core effect system concepts
+- `effect-polymorphism.html` - Effect polymorphism
+- `effect-oriented-programming.html` - Effect-oriented programming
+- `effects-and-handlers.html` - Effects and handlers
+```
+
+We can now start. We run `claude` and enter `plan` mode:
+
