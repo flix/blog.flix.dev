@@ -111,12 +111,12 @@ Let me first explore the Flix documentation to understand the effect system, Con
 
 After about 4 minutes, there are some questions to ask:
 
-```
+```markdown
 For larger grids (e.g., 4x4 or 5x5), should the win condition always be 3 in a row, or should it match the grid size (e.g., 4 in a row for 4x4)?
 ```
 I say "Always 3 in a row".
 
-```
+```claude
 How sophisticated should the AI opponent be?
 
 ❯ 1. Random valid moves
@@ -129,14 +129,14 @@ How sophisticated should the AI opponent be?
 
 I pick Random because this will require another effect usage that I have not told Claude about. 
 
-```
+```claude
 Now I have clear requirements. Let me design the implementation plan.
 ```
 
 After about 7 minues of Clauding... During this its reading some more docs.
 Including Random.html (promising!). The plan is long. 
 
-```
+```claude
 ---
  1. Data Type Definitions
 
@@ -254,7 +254,7 @@ A few problems here:
 I decide that 1 and 2 can be refactored afterwards. I could hint about the records,
 but let us see how it goes. So I tell Claude to go ahead!
 
-```
+```claude
 The plan is approved. Let me set up a task list and start implementing.
 ```
 
@@ -262,9 +262,15 @@ I let Claude use the Flix compiler.
 
 First issue is the redefinition of Logger. This is quickly fixed by renaming to GameLogger.
 
-Now its stuck on the record syntax:
-
+```claude
+⏺ I see several issues. The main ones are:
+  1. Logger is already defined in the standard library - I need to rename it to GameLogger
+  2. The backtick syntax doesn't work with qualified names - need to use Int32.mod(index, size)
 ```
+
+Now its stuck on the record syntax. Last this happened it could not recover. 
+
+```claude
 >> Unable to unify the types: 'Player' and 'JvmToType(j0)'.
 
 286 |             match state.currentPlayer {
@@ -273,7 +279,7 @@ Now its stuck on the record syntax:
 
 Next up:  
 
-```
+```claude
 ⏺ I see several issues. Let me check the Flix documentation for the correct syntax:
 
 ⏺ I see! In Flix, record field access uses # not .. So state.size should be state#size. Let me also search for the correct modulo syntax:
@@ -290,20 +296,26 @@ type erro related to Random.
 
 Again Claude goes to the docs:
 
+
+
+```claude
  I see! Key insights:
   1. Random.runWithIO introduces NonDet effect (which is uninterpretable)
   2. Random.runWithSeed(seed, f) handles Random without NonDet
   3. No do keyword - effect operations are called directl
+```
 
 Last error:
 
+```claude
 ⏺ Good progress! Just one error left - String.split already returns a List, not a Vector. Let me fix that:
+```
 
 And done! The file is 336 lines of Flix code. 
 
 Lets try it:
 
-```
+```sh
 flix run 
 
 Welcome to Tic-Tac-Toe!                                                         
@@ -351,7 +363,7 @@ And I lost!
 
 The game_log file is there:
 
-```
+```markdown
 === Tic-Tac-Toe Game Log ===
 X played at (1, 2)
 O played at (3, 3)
@@ -370,13 +382,13 @@ Lets return to the TODO list:
 
 Lets start with 1:
 
-```
+```claude
 Refactor the code base to use the built-in Logger effect
 ```
 
 Claude consults the Flix documentation again. 
 
-```
+```claude
 I now understand the built-in Logger API. The refactoring involves:
 
   1. Removing the custom GameLogger effect
@@ -389,7 +401,7 @@ The refactoring is successful.
 Next, I ask claude to fix the main method. This is using a new feature just 
 released a few months ago and not really documented anywhere, except in one file. 
 
-```
+```claude
 Refactor main to use default handlers for the built-in effects. Use run-with for the Logger effect and custom handler. See 
 @docs/doc.flix.dev/default-handlers.html for documentation. 
 ```
@@ -397,7 +409,7 @@ Refactor main to use default handlers for the built-in effects. Use run-with for
 At this point the dreaded compacting conversation happens. Lets see how it goes.
 
 
-```
+```claude
 ⏺ The error shows that Random doesn't have a default handler. Let me check the documentation more carefully:
 
 ⏺ Read(docs/doc.flix.dev/default-handlers.html)
@@ -413,7 +425,7 @@ At this point the dreaded compacting conversation happens. Lets see how it goes.
 
 The refactoring completes successfully. 
 
-````
+```claude
  What about the FileWrite effect? Can we use the default handler for that too? 
 
 ⏺ Let me check if FileWrite has a default handler:
@@ -426,7 +438,7 @@ The refactoring completes successfully.
 
 then
 
-```
+```claude
 I see - FileWrite has runWithIO but it's not marked with @DefaultHandler. The grep match was from FileWriteWithResult, not FileWrite. Let me revert to the working version.
 ```
 
@@ -436,7 +448,7 @@ The final game is available here: ..
 
 For reference these are the effectful functions of the game:
 
-````
+```flix
 def aiMove(state: GameState): (Int32, Int32) \ Random =
 def cellToChar(cell: Cell): String =
 def displayBoard(state: GameState): Unit \ Console =
@@ -451,7 +463,7 @@ def main(): Unit \ {Console, IO, NonDet} =
 
 A few examples:
 
-```
+```flix
 def startGame(): Unit \ {Console, Logger, Random} =
     Console.println("Welcome to Tic-Tac-Toe!");
     Console.println("======================");
@@ -464,7 +476,7 @@ def startGame(): Unit \ {Console, Logger, Random} =
     discard gameLoop(state)
 ```
 
-```
+```flix
 def promptGridSize(): Int32 \ Console =
     Console.println("Enter grid size (3-9):");
     let input = Console.readln();
@@ -476,7 +488,7 @@ def promptGridSize(): Int32 \ Console =
     }
 ```
 
-```
+```flix
 def handleLoggerWithFile(logFile: String, f: Unit -> a \ ef): a \ (ef - Logger) + FileWrite =
     run {
         f()
@@ -489,6 +501,7 @@ def handleLoggerWithFile(logFile: String, f: Unit -> a \ ef): a \ (ef - Logger) 
     }
 ```
 
+Style is not great. But then again, no examples to compare to.
 
 Ingredients for success:
 
