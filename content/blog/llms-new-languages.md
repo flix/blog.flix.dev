@@ -63,6 +63,7 @@ This is project is written in the Flix programming language.
 
 - **API Reference**: `docs/api.flix.dev/`
 - **Documentation**: `docs/doc.flix.dev/`
+- **Examples**: `https://github.com/flix/flix/tree/master/examples`
 
 ## Flix Compiler Commands
 
@@ -82,5 +83,27 @@ Flix has an effect system. Documentation is in `docs/doc.flix.dev/`:
 - `effects-and-handlers.html` - Effects and handlers
 ```
 
-We can now start. We run `claude` and enter `plan` mode:
+We can now start. We run `claude` and enter `plan` mode. I am using Claude Opus 4.5:
+
+```sh
+Let us write a tictactoe game in Flix. The game should ask the user for a grid size
+(e.g. 3x3 or 4x4) and then prompt the user for a move. Check that the move is valid
+according to the rules of Tic-Tac-Toe. After each player move, the AI makes a valid move.
+A player wins when they have three consecutive x's or o's. 
+
+Use the Console effect for user input and output. Use a functional data structure to
+store the game state. Use a recursive function for the game loop. 
+
+Add use the Logger effect to log all valid moves in the game. 
+Write your own custom handler for Logger that writes to a logfile using the FileWrite effect.
+
+Consult the Flix documentation as necessary during planning.
+```
+
+We let Claude chew on that a bit. It comes back with:
+
+```sh
+I'll help you create a Tic-Tac-Toe game in Flix. 
+Let me first explore the Flix documentation to understand the effect system, Console, and FileWrite APIs.
+```
 
