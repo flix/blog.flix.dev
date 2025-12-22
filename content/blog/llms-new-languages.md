@@ -359,30 +359,61 @@ X played at (2, 1)
 O played at (3, 2)
 ```
 
-## Refactoring
+## Refactoring the Game
 
-Lets return to the TODO list:
+Let us return to our own TODO list. We wanted Claude to fix two issues:
 
-- Defining custom Logger effect. What I wanted was to use the std lib Logger effect, but with a custom handler.
-- main entry point is not using run-with construct.
+1. Claude was using its own `GameLogger` effect, but we wanted it to use the
+   built-in `Logger` effect, but with a custom handler. 
+1. The `main` entry point is correct, but non-idiomatic. 
 
-Lets start with 1:
+Let us start with (1). We prompt Claude:
 
 ```claude
-Refactor the code base to use the built-in Logger effect
+Refactor the project to use the built-in Logger effect.
 ```
 
-Claude consults the Flix documentation again. 
+Claude consults the Flix API and Book again. 
 
 ```claude
 I now understand the built-in Logger API. The refactoring involves:
 
   1. Removing the custom GameLogger effect
   2. Using Logger.info(message) instead of GameLogger.logMove(move)
-  3. Writing a custom handler for the built-in Logger that writes to file using FileWrite
+  3. Writing a custom handler for the built-in Logger that writes to 
+  file using FileWrite
 ```
 
-The refactoring is successful.
+Notably Claude has figured out that it has to write its own handler for `Logger`
+which _itself_ uses the `FileWrite` effect. I ask Claude to continue. The
+refactoring is successful. The `GameLogger` effect is removed and `Logger` is
+used. The new custom handler is:
+
+```flix
+// Named "handleLoggerWithFile" but renamed to h to fit on the screen.
+def h(logFile: String, f: Unit -> a \ ef): a \ (ef - Logger) + FileWrite =
+    run {
+        f()
+    } with handler Logger {
+        def log(severity, msg, resume) = {
+            let line = "[${severity}] ${msg}\n";
+            FileWrite.append({str = line}, logFile);
+            resume()
+        }
+    }
+```
+
+Notably, Claude has figured out the correct syntax for an effect polymorphic
+function that handles `Logger` while causing the `FileWrite` effect, i.e. the
+signature: 
+
+```flix
+def h(logFile: String, f: Unit -> a \ ef): a \ (ef - Logger) + FileWrite = 
+```
+
+Impressive!
+
+
 
 Next, I ask claude to fix the main method. This is using a new feature just 
 released a few months ago and not really documented anywhere, except in one file. 
@@ -474,18 +505,6 @@ def promptGridSize(): Int32 \ Console =
     }
 ```
 
-```flix
-def handleLoggerWithFile(logFile: String, f: Unit -> a \ ef): a \ (ef - Logger) + FileWrite =
-    run {
-        f()
-    } with handler Logger {
-        def log(severity, msg, resume) = {
-            let line = "[${severity}] ${msg}\n";
-            FileWrite.append({str = line}, logFile);
-            resume()
-        }
-    }
-```
 
 Style is not great. But then again, no examples to compare to.
 
