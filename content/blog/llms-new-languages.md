@@ -447,7 +447,21 @@ I need to keep Random.runWithIO() explicit:
 
 The refactoring completes successfully. The new `main` is:
 
+```flix
 
+def main(): Unit \ {Console, IO, NonDet} =
+    let logFile = "game_log.txt";
+    // Initialize log file
+    discard FileWrite.runWithIO(() -> FileWrite.write({str = "=== Tic-Tac-Toe Game Log ===\n"}, logFile));
+    // Run the game - Console uses default handler, Random/Logger/FileWrite need explicit handlers
+    discard FileWrite.runWithIO(() ->
+        handleLoggerWithFile(logFile, () ->
+            Random.runWithIO(() ->
+                startGame()
+            )
+        )
+    )
+```
 
 ```claude
  What about the FileWrite effect? Can we use the default handler for that too? 
