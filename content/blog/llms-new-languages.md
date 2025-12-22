@@ -29,11 +29,15 @@ TODO: Configure the compiler.
 
 TODO: We will use all of flixes features to challenge it.
 
-TicTacToe example
-
 Vibe coding is harder because there is no working code base. 
 
-We begin as follows:
+## Experiment: Vibe Coding Tic-Tac-Toe
+
+We are now going to Vibe Code a Tic-Tac-Toe game in Flix using Claude Code with
+the Opus 4.5 model. We choose Tic-Tac-Toe because it is a well-defined game that
+require a moderate use of effects. 
+
+We begin by creating an empty Flix project:
 
 ```sh
 mkdir tictactoe
@@ -41,8 +45,9 @@ cd tictactoe
 flix init
 ```
 
-We now download the Flix documentation and API. We could of course also access
-this material online, but downloading it makes subsequent uses faster:
+Next, we are going to help Claude by downloading the entire 
+[Flix API](https://doc.flix.dev/) documentation and the 
+[Flix Book](https://doc.flix.dev/) documentation:
 
 ```sh
 mkdir -p docs
@@ -51,10 +56,10 @@ wget -r -np -k https://api.flix.dev/
 wget -r -np -k https://doc.flix.dev/
 ```
 
-Running these commands takes less than a minute. (If you are following this blog
-post, ou have my personal permission to crawl our sites like this.)
+The two downloads take a few minutes. If you are reading this blog post, you
+have my permission to crawl our documentation like the above. 
 
-Next, we create a `CLAUDE.md` file with the following:
+Next, we create a `CLAUDE.md` file with the following text:
 
 ```markdown
 # Overview
@@ -65,7 +70,6 @@ This is project is written in the Flix programming language.
 
 - **API Reference**: `docs/api.flix.dev/`
 - **Documentation**: `docs/doc.flix.dev/`
-- **Examples**: `https://github.com/flix/flix/tree/master/examples`
 
 ## Flix Compiler Commands
 
@@ -73,7 +77,6 @@ The `flix` compiler is available on PATH and supports the following commands:
 
 - `flix check` - Check code for errors
 - `flix run` - Run the project
-- `flix test` - Run tests
 
 ## Effect System
 
@@ -85,28 +88,36 @@ Flix has an effect system. Documentation is in `docs/doc.flix.dev/`:
 - `effects-and-handlers.html` - Effects and handlers
 ```
 
-We can now start. We run `claude` and enter `plan` mode. I am using Claude Opus 4.5:
+We can now start. We run `claude` and enter `plan` mode. 
 
-```sh
-Let us write a tictactoe game in Flix. The game should ask the user for a grid size
-(e.g. 3x3 or 4x4) and then prompt the user for a move. Check that the move is valid
-according to the rules of Tic-Tac-Toe. After each player move, the AI makes a valid move.
-A player wins when they have three consecutive x's or o's. 
+We give it the following prompt:
 
-Use the Console effect for user input and output. Use a functional data structure to
-store the game state. Use a recursive function for the game loop. 
+```claude
+Let us write a tictactoe game in Flix. The game should ask the user for 
+a grid size (e.g. 3x3 or 4x4) and then prompt the user for a move. Check 
+that the move is valid according to the rules of Tic-Tac-Toe. After each 
+player move, the AI makes a valid move. A player wins when they have 
+three consecutive x's or o's. 
 
-Add use the Logger effect to log all valid moves in the game. 
-Write your own custom handler for Logger that writes to a logfile using the FileWrite effect.
+Use the Console effect for user input and output. Use a functional data 
+structure to store the game state. 
+
+Use a recursive function for the game loop. 
+
+Use the Logger effect to log all moves in the game. Write your own custom 
+handler for Logger that writes to a logfile using the FileWrite effect.
 
 Consult the Flix documentation as necessary during planning.
 ```
 
-We let Claude chew on that a bit. It comes back with:
+The prompt is reasonable, but not very polish. We let Claude chew on the
+instructions and it comes back with: 
 
-```sh
+```claude
 I'll help you create a Tic-Tac-Toe game in Flix. 
-Let me first explore the Flix documentation to understand the effect system, Console, and FileWrite APIs.
+
+Let me first explore the Flix documentation to understand the effect 
+system, Console, and FileWrite APIs.
 ```
 
 After about 4 minutes, there are some questions to ask:
