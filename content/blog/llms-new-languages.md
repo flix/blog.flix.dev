@@ -92,7 +92,7 @@ We can now start. We run `claude` and enter `plan` mode.
 
 We give it the following prompt:
 
-```claude
+```prompt
 Let us write a tictactoe game in Flix. The game should ask the user for 
 a grid size (e.g. 3x3 or 4x4) and then prompt the user for a move. Check 
 that the move is valid according to the rules of Tic-Tac-Toe. After each 
@@ -369,7 +369,7 @@ Let us return to our own TODO list. We wanted Claude to fix two issues:
 
 Let us start with (1). We prompt Claude:
 
-```claude
+```prompt
 Refactor the project to use the built-in Logger effect.
 ```
 
@@ -413,34 +413,41 @@ def h(logFile: String, f: Unit -> a \ ef): a \ (ef - Logger) + FileWrite =
 
 Impressive!
 
+Next, I want to fix (2) by asking claude to use default handlers. This is a new
+feature that is barely used in any examples and only documented in the book. I prompt:
 
+```prompt
+Refactor main to use default handlers for the built-in effects. 
 
-Next, I ask claude to fix the main method. This is using a new feature just 
-released a few months ago and not really documented anywhere, except in one file. 
+Use run-with for the Logger effect and custom handler. 
 
-```claude
-Refactor main to use default handlers for the built-in effects. Use run-with for the Logger effect and custom handler. See 
-@docs/doc.flix.dev/default-handlers.html for documentation. 
+See @docs/doc.flix.dev/default-handlers.html for documentation. 
 ```
 
-At this point the dreaded compacting conversation happens. Lets see how it goes.
+At this point the dreaded "compacting conversation" happens. Lets see how it goes.
 
+After a bit of `Clauding...`:
 
 ```claude
-⏺ The error shows that Random doesn't have a default handler. Let me check the documentation more carefully:
+The error shows that Random doesn't have a default handler. 
+Let me check the documentation more carefully:
 
-⏺ Read(docs/doc.flix.dev/default-handlers.html)
-  ⎿  Read 284 lines
+Read(docs/doc.flix.dev/default-handlers.html)
+⎿  Read 284 lines
 
-⏺ I see - the documentation shows Clock, Env, and Logger have default handlers, but Random may not. Let me check the Random API:
+I see - the documentation shows Clock, Env, and Logger have 
+default handlers, but Random may not. Let me check the Random API:
 
-⏺ Search(pattern: "@DefaultHandler", path: "docs/api.flix.dev", output_mode: "content")
-  ⎿  Found 10 lines (ctrl+o to expand)
+Search(pattern: "@DefaultHandler", path: "docs/api.flix.dev")
+⎿  Found 10 lines (ctrl+o to expand)
 
-⏺ Console and Logger have default handlers, but Random does not. I need to keep Random.runWithIO() explicit:
+Console and Logger have default handlers, but Random does not. 
+I need to keep Random.runWithIO() explicit:
 ```
 
-The refactoring completes successfully. 
+The refactoring completes successfully. The new `main` is:
+
+
 
 ```claude
  What about the FileWrite effect? Can we use the default handler for that too? 
