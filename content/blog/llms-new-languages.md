@@ -8,23 +8,27 @@ authors = ["Magnus Madsen"]
 tags = ["language-design", "llms", "flix"]
 +++
 
-I am a programming language researcher working on compilers, type and effect
-systems, and program analysis. I am also the lead developer of the Flix
-programming language (flix.dev). I am not an AI researcher.
+Recently, I’ve seen several discussions revolve around the question:
 
-Recently, at work, on HackerNews, and on Reddit I have seen questions to the effect of:
+> **Will large language models (LLMs) help or hurt the adoption of new programming languages?**
 
-> **Will LLMs aid or hinder adoption of new programming languages?**
+In this post, I will share my perspective on this question as the lead developer
+of the [Flix programming language](https://flix.dev), and as an academic working
+on programming language design, type and effect systems, and compilers.
 
-In this blog post, I will discuss this question from the viewpoint of a
-programming language researcher. 
+What I want to explore is whether a modern LLM — here, Claude Code (Opus 4.5) —
+is able to program in Flix, given that the amount of available Flix source code
+code is tiny compared to well-established languages like Python or Java.
 
-We are now going to Vibe Code a Tic-Tac-Toe game in Flix using Claude Code with
-the Opus 4.5 model. We choose Tic-Tac-Toe because it is a well-defined game that
-require a moderate use of effects. Vibe coding is harder because there is no
-working code base. 
+I want to focus on one of Flix’s unique features: its support for
+**effect-oriented programming**. Will Claude be able to use it?
 
 ## Experiment: Vibe Coding Tic-Tac-Toe
+
+We will Vibe Code a Tic-Tac-Toe game in Flix using Claude Code with the Opus 4.5
+model. We choose Tic-Tac-Toe because it is a well-defined game that require a
+moderate use of effects. Vibe coding is harder because there is no working code
+base. 
 
 We begin by creating an empty Flix project:
 
