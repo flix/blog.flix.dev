@@ -8,34 +8,23 @@ authors = ["Magnus Madsen"]
 tags = ["language-design", "llms", "flix"]
 +++
 
-I am a PL researcher working on compilers, type and effect systems, and program
-analysis. I am also the lead developer of the Flix programming language
-(flix.dev). I am not an AI researcher.
+I am a programming language researcher working on compilers, type and effect
+systems, and program analysis. I am also the lead developer of the Flix
+programming language (flix.dev). I am not an AI researcher.
 
 Recently, at work, on HackerNews, and on Reddit I have seen questions to the effect of:
 
 > **Will LLMs aid or hinder adoption of new programming languages?**
 
-In this blog post, I will discuss this question from the viewpoint of a PL
-researcher. 
-
-TODO: We will be using claude code.
-
-TODO: Commands to download doc.flix.dev and api.flix.dev + examples
-
-TODO: Not a fan of vibe coding, but lets try it.
-
-TODO: Configure the compiler. 
-
-TODO: We will use all of flixes features to challenge it.
-
-Vibe coding is harder because there is no working code base. 
-
-## Experiment: Vibe Coding Tic-Tac-Toe
+In this blog post, I will discuss this question from the viewpoint of a
+programming language researcher. 
 
 We are now going to Vibe Code a Tic-Tac-Toe game in Flix using Claude Code with
 the Opus 4.5 model. We choose Tic-Tac-Toe because it is a well-defined game that
-require a moderate use of effects. 
+require a moderate use of effects. Vibe coding is harder because there is no
+working code base. 
+
+## Experiment: Vibe Coding Tic-Tac-Toe
 
 We begin by creating an empty Flix project:
 
@@ -535,7 +524,7 @@ snippets from the Flix Book, its impressive how well it did.
 
 ## Conclusions
 
-Returning to the beggining of the blog post. What will be impact of LLMS?
+Returning to the beggining of the blog post. What will be impact of LLMs?
 
 Based on my six month experience with Claude, and as I tried to illustrate with
 the above example, it seems LLMs wilkl only help new programming languages.
