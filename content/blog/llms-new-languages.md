@@ -520,12 +520,18 @@ def promptGridSize(): Int32 \ Console =
 
 ## Lessons Learned
 
-Style is not great. But then again, no examples to compare to.
+I think they key lessons is that:
 
-Ingredients for success:
+- Giving Claude access to the Flix API and Book is invaluable. Claude is very
+  good at consulting both the API and documentation when it needs to use a
+  feature or encounters a problem. 
+- Letting Claude run the compiler repeatedly is very helpful. Moreover, the Flix
+  compiler being highly resilient allows Claude to discover and fix many errors in one go; meaning that only few compilations are actually required. 
 
-- Docs APIs
-- Runnable compiler with reasonable error messages. (Resiliency helps here.)
+The code style Claude uses is not great, but it is also not terrible. In fact,
+considering that Claude was never given a single large program, but only
+snippets from the Flix Book, its impressive how well it did. 
+
 
 ## Conclusions
 
