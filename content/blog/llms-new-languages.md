@@ -463,28 +463,11 @@ def main(): Unit \ {Console, IO, NonDet} =
     )
 ```
 
-```claude
- What about the FileWrite effect? Can we use the default handler for that too? 
+**TODO**.
 
-⏺ Let me check if FileWrite has a default handler:
+## Overview
 
-⏺ Search(pattern: "@DefaultHandler|runWithIO", path: "docs/api.flix.dev/FileWrite.html", output_mode: "content")
-  ⎿  Found 2 lines (ctrl+o to expand)
-
-⏺ Yes! FileWrite has a @DefaultHandler. Let me update the code to use it:
-```
-
-then
-
-```claude
-I see - FileWrite has runWithIO but it's not marked with @DefaultHandler. The grep match was from FileWriteWithResult, not FileWrite. Let me revert to the working version.
-```
-
-which is correct.
-
-The final game is available here: ..
-
-For reference these are the effectful functions of the game:
+For reference here some of effectful functions of the game:
 
 ```flix
 def aiMove(state: GameState): (Int32, Int32) \ Random =
@@ -499,7 +482,10 @@ def startGame(): Unit \ {Console, Logger, Random} =
 def main(): Unit \ {Console, IO, NonDet} =
 ```
 
-A few examples:
+Note that Claude did a great job at not using `IO` anywhere except for in
+`main`. Moreover, each function only has the effects its reasonably needs. 
+
+We can look at a few examples:
 
 ```flix
 def startGame(): Unit \ {Console, Logger, Random} =
@@ -514,6 +500,11 @@ def startGame(): Unit \ {Console, Logger, Random} =
     discard gameLoop(state)
 ```
 
+Here `startGame` has the `Console`, `Logger`, and `Random` effects. `Console` is
+used directly, whereas `Logger` and `Random` are used by `gameLoop`. 
+
+Here is the function that asks for the size of the grid:
+
 ```flix
 def promptGridSize(): Int32 \ Console =
     Console.println("Enter grid size (3-9):");
@@ -527,10 +518,26 @@ def promptGridSize(): Int32 \ Console =
 ```
 
 
+## Lessons Learned
+
 Style is not great. But then again, no examples to compare to.
 
 Ingredients for success:
 
-- Docs
-- APIs
+- Docs APIs
 - Runnable compiler with reasonable error messages. (Resiliency helps here.)
+
+## Conclusions
+
+Returning to the beggining of the blog post. What will be impact of LLMS?
+
+Based on my six month experience with Claude, and as I tried to illustrate with
+the above example, it seems LLMs wilkl only help new programming languages.
+Given access to API documentation and human documentation, Claude is an
+excellent Flix programmer. And this is with minimal context. A CLAUDE.md file
+that also pointed out some of Flix specific quirks would surely supercharge its
+abilities. 
+
+In summary, the future of new programming languages looks as bright as ever. 
+
+Until next time, happy Clauding.
