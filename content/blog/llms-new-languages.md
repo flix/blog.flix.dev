@@ -500,8 +500,19 @@ richness of the domain, we handle the `Logger` effect using
 remaining effects using their associated `runWithIO` handlers which introduces the 
 _primitive_ effects `IO` and `NonDet`. 
 
-> **Aside:** We 
+> **Aside 1:** The program here illustrates how in an effect-oriented programming
+> languages, effects are pushed outwards towards `main` where they must be handled·
+> That is to say, all the dependency injection and plumbing typically happens near main,
+> while most of the program remains pure modulo effects.
 
+> **Aside 2:** We might be disappointed that main is such complex. Why could we
+> not use default handlers for FileWrite and Random? The answer is two-fold.
+> With respect to Random, there is a limitation in Flix that prevents it. With
+> respect to FileWrite, the API pushes errors into the handler (instead of at the call sites),
+> hence we must deal with failure ourselves. (Here by printing the terminal). 
+> An alternative choice would have been to use FileWriteWithResult which would force
+> clients, i.e. the game, to deal with errors. Then we could have use a default handler 
+> in main at the cost of additional complexity within the game logic. 
 
 ## Overview
 
