@@ -492,7 +492,13 @@ def main(): Unit \ {Console, IO, NonDet} =
     }
 ```
 
-Much better. 
+Much better. The example shows that Claude is able to program effectively (no
+pun intended!) with a rich collection of effects. Here we have a program that
+uses the `Console`, `FileWrite`,`Logger`, and `Random` effects. Embracing the
+richness of the domain, we handle the `Logger` effect using
+`handleLoggerWithFile` which causes the `FileWrite` effect. We then handle the
+remaining effects using their associated `runWithIO` handlers which introduces the 
+_primitive_ effects `IO` and `NonDet`. 
 
 > **Aside:** We 
 
