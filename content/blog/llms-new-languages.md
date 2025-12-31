@@ -584,15 +584,18 @@ snippets from the Flix Book, it's impressive how well it did.
 
 ## Conclusions
 
-Returning to the beginning of the blog post. What will be the impact of LLMs?
+Returning to main question of the blog post: 
 
-Based on my six month experience with Claude, and as I tried to illustrate with
-the above example, it seems LLMs will only help new programming languages.
-Given access to API documentation and human documentation, Claude is an
-excellent Flix programmer. And this is with minimal context. A `CLAUDE.md` file
-that also pointed out some of Flix specific quirks would surely supercharge its
-abilities. 
+> **Will large language models (LLMs) help or hurt the adoption of new programming languages?**
 
-In summary, the future of new programming languages looks as bright as ever. 
+Based on my personal experience, I think the LLMs will help the adoption of new
+programming languages. In this blog post, we have seen that by giving Claude
+access to the Flix compiler together with Flix API and language documentation it
+becomes a decent Flix programmer. 
+
+We saw that Claude struggle slightly on some specific aspects, but with a
+well-crafted `CLAUDE.md` these misunderstandings can easily be cleared up.
+
+In my view, the future of new programming languages looks as bright as ever. 
 
 Until next time, happy Clauding.
