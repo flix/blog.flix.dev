@@ -441,7 +441,6 @@ I need to keep Random.runWithIO() explicit:
 The refactoring completes successfully. The new `main` is:
 
 ```flix
-
 def main(): Unit \ {Console, IO, NonDet} =
     let logFile = "game_log.txt";
     // Initialize log file
@@ -456,7 +455,47 @@ def main(): Unit \ {Console, IO, NonDet} =
     )
 ```
 
-**TODO**.
+Ugh. This is not good. While the code works, its structure is terrible. A few
+things have gone wrong, which was partly our own fault: 
+
+- We asked Claude to use default handlers for all effects. However, the
+  `FileWrite` effect lacks a default handler because it can fail. Specifically,
+  `FileWrite.runWithIO` returns a `Result[IoError, Unit]`. Claude, in its
+  infinite wisdom, decided that we should just discard the `Result`.
+- We asked Claude to use the `run-with` construct, but it simply ignored us. 
+
+Let us try again, but this time we will be more specific:
+
+```prompt
+I want you to refactor main. I want it to use a single run-with construct. 
+Let bind the result to a local variable called r. Inside the run, you 
+should call FileWrite.write and startGame. You should then use "with" to 
+install the handlers handleLoggerWithFile and Random.runWithIO. Lastly, 
+pattern match on the result r, and print an error message using 
+Console.println if it is Result.Err. 
+```
+
+Now Claude consults the Flix documentation to learn about `run-with` and produces: 
+
+```
+def main(): Unit \ {Console, IO, NonDet} =
+    let logFile = "game_log.txt";
+    let r = run {
+        FileWrite.write({str = "=== Tic-Tac-Toe Game Log ===\n"}, logFile);
+        startGame()
+    } with handleLoggerWithFile(logFile)
+      with Random.runWithIO
+      with FileWrite.runWithIO;
+    match r {
+        case Result.Err(e) => Console.println("Error: ${e}")
+        case Result.Ok(_) => ()
+    }
+```
+
+Much better. 
+
+> **Aside:** We 
+
 
 ## Overview
 
