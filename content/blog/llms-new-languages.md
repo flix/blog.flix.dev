@@ -92,13 +92,13 @@ that the move is valid according to the rules of Tic-Tac-Toe. After each
 player move, the AI makes a valid move. A player wins when they have 
 three consecutive x's or o's. 
 
-Use the `Console` effect for user input and output. Use a functional data
+Use the Console effect for user input and output. Use a functional data
 structure to store the game state.
 
 Use a recursive function for the game loop.
 
-Use the `Logger` effect to log all moves in the game. Write your own custom
-handler for `Logger` that writes to a logfile using the `FileWrite` effect.
+Use the Logger effect to log all moves in the game. Write your own custom
+handler for Logger that writes to a logfile using the FileWrite effect.
 
 Consult the Flix documentation as necessary during planning.
 ```
@@ -126,7 +126,7 @@ How sophisticated should the AI opponent be?
      Optimal AI that never loses - more complex implementation
 ```
 
-Initially, I wanted to pick (3). However, picking (1) is more challenging
+Initially, I wanted to pick **(3)**. However, picking **(1)** is more challenging
 because that will require Claude to use the `Random` effect whose handler
 introduces the primitive `NonDet` effect. Claude will have to figure this out
 for itself. We make our choice and:
@@ -206,9 +206,9 @@ Overall the plan looks reasonable, but there are a few issues:
   up Claude because Flix uses `rec#field` for field selection, not `rec.field`
   which is used for Java interoperability. 
 
-We give Claude instructions to resolve (1) and (2), and warn about (3). But
+We give Claude instructions to resolve **(1)** and **(2)**, and warn about **(3)**. But
 instead, let us see how well Claude does without further help. Later, we can
-return and ask Claude to refactor (1) and (2). We proceed:
+return and ask Claude to refactor **(1)** and **(2)**. We proceed:
 
 ```claude
 The plan is approved. Let me set up a task list and start implementing.
@@ -360,10 +360,10 @@ Let us return to our own TODO list. We wanted Claude to fix two issues:
    built-in `Logger` effect, but with a custom handler.
 1. The `main` entry point is correct, but non-idiomatic. 
 
-Let us start with (1). We prompt Claude:
+Let us start with **(1)**. We prompt Claude:
 
 ```prompt
-Refactor the project to use the built-in `Logger` effect.
+Refactor the project to use the built-in Logger effect.
 ```
 
 Claude consults the Flix API and Book again. 
@@ -406,13 +406,13 @@ def h(logFile: String, f: Unit -> a \ ef): a \ (ef - Logger) + FileWrite =
 
 Impressive!
 
-Next, I want to fix (2) by asking Claude to use default handlers. This is a new
+Next, I want to fix **(2)** by asking Claude to use default handlers. This is a new
 feature that is barely used in any examples and only documented in the book. I prompt:
 
 ```prompt
-Refactor `main` to use default handlers for the built-in effects.
+Refactor main to use default handlers for the built-in effects.
 
-Use `run-with` for the `Logger` effect and custom handler.
+Use run-with for the Logger effect and custom handler.
 
 See @docs/doc.flix.dev/default-handlers.html for documentation.
 ```
@@ -467,12 +467,12 @@ things have gone wrong, which was partly our own fault:
 Let us try again, but this time we will be more specific:
 
 ```prompt
-I want you to refactor `main`. I want it to use a single `run-with` construct.
-Let bind the result to a local variable called `r`. Inside the run, you
-should call `FileWrite.write` and `startGame`. You should then use "with" to
-install the handlers `handleLoggerWithFile` and `Random.runWithIO`. Lastly,
-pattern match on the result `r`, and print an error message using
-`Console.println` if it is `Result.Err`.
+I want you to refactor main. I want it to use a single run-with construct.
+Let bind the result to a local variable called r. Inside the run, you
+should call FileWrite.write and startGame. You should then use "with" to
+install the handlers handleLoggerWithFile and Random.runWithIO. Lastly,
+pattern match on the result r, and print an error message using
+Console.println if it is Result.Err.
 ```
 
 Now Claude consults the Flix documentation to learn about `run-with` and produces: 
@@ -500,19 +500,20 @@ richness of the domain, we handle the `Logger` effect using
 remaining effects using their associated `runWithIO` handlers which introduces the
 _primitive_ effects `IO` and `NonDet`. 
 
-> **Aside 1:** The program here illustrates how in an effect-oriented programming
+> **Aside:** The program here illustrates how in an effect-oriented programming
 > languages, effects are pushed outwards towards `main` where they must be handled.
 > That is to say, all the dependency injection and plumbing typically happens near `main`,
 > while most of the program remains pure modulo effects.
 
-> **Aside 2:** We might be disappointed that `main` is so complex. Why could we
-> not use default handlers for `FileWrite` and `Random`? The answer is two-fold.
-> With respect to `Random`, there is a limitation in Flix that prevents it. With
-> respect to `FileWrite`, the API pushes errors into the handler (instead of at the call sites),
-> hence we must deal with failure ourselves. (Here by printing to the terminal).
-> An alternative choice would have been to use `FileWriteWithResult` which would force
-> clients, i.e. the game, to deal with errors. Then we could have used a default handler
-> in `main` at the cost of additional complexity within the game logic. 
+We might be disappointed that `main` is so complex. Why could we not use default
+handlers for `FileWrite` and `Random`? The answer is two-fold. With respect to
+`Random`, there is a limitation in Flix that prevents it. With respect to
+`FileWrite`, the API pushes errors into the handler (instead of at the call
+sites), hence we must deal with failure ourselves. (Here by printing to the
+terminal). An alternative choice would have been to use `FileWriteWithResult`
+which would force clients, i.e. the game, to deal with errors. Then we could
+have used a default handler in `main` at the cost of additional complexity
+within the game logic. 
 
 ## Overview
 
