@@ -92,13 +92,13 @@ that the move is valid according to the rules of Tic-Tac-Toe. After each
 player move, the AI makes a valid move. A player wins when they have 
 three consecutive x's or o's. 
 
-Use the Console effect for user input and output. Use a functional data 
-structure to store the game state. 
+Use the `Console` effect for user input and output. Use a functional data
+structure to store the game state.
 
-Use a recursive function for the game loop. 
+Use a recursive function for the game loop.
 
-Use the Logger effect to log all moves in the game. Write your own custom 
-handler for Logger that writes to a logfile using the FileWrite effect.
+Use the `Logger` effect to log all moves in the game. Write your own custom
+handler for `Logger` that writes to a logfile using the `FileWrite` effect.
 
 Consult the Flix documentation as necessary during planning.
 ```
@@ -199,9 +199,9 @@ reports back with the full plan (which I have abbreviated):
 Overall the plan looks reasonable, but there are a few issues:
 
 1. Claude wants to define its own `Logger` effect instead of using the `Logger`
-  effect from the Standard Library with a custom effect handler. 
+  effect from the Standard Library with a custom effect handler.
 1. The `main` function, while reasonable, does not use the more idiomatic
-  `run-with` construct nor does it use default handlers. 
+  `run-with` construct nor does it use default handlers.
 1. Claude wants to use records for `GameState` and `Move`. Typically this trips
   up Claude because Flix uses `rec#field` for field selection, not `rec.field`
   which is used for Java interoperability. 
@@ -267,8 +267,8 @@ Let me also search for the correct modulo syntax:
   - Modulo: Int32.modulo(index, size)
 ```
 
-So far these problem have been related to syntax and not to effects. But Claude
-seval type and effect errors trying to use them them. Including incorrect use of
+So far these problems have been related to syntax and not to effects. But Claude
+has several type and effect errors trying to use them. Including incorrect use of
 `do` (which is no longer needed and has been removed from the language. Does
 Claude have some old knowledge from papers?)
 
@@ -357,13 +357,13 @@ O played at (3, 2)
 Let us return to our own TODO list. We wanted Claude to fix two issues:
 
 1. Claude was using its own `GameLogger` effect, but we wanted it to use the
-   built-in `Logger` effect, but with a custom handler. 
+   built-in `Logger` effect, but with a custom handler.
 1. The `main` entry point is correct, but non-idiomatic. 
 
 Let us start with (1). We prompt Claude:
 
 ```prompt
-Refactor the project to use the built-in Logger effect.
+Refactor the project to use the built-in `Logger` effect.
 ```
 
 Claude consults the Flix API and Book again. 
@@ -373,7 +373,7 @@ I now understand the built-in Logger API. The refactoring involves:
 
   1. Removing the custom GameLogger effect
   2. Using Logger.info(message) instead of GameLogger.logMove(move)
-  3. Writing a custom handler for the built-in Logger that writes to 
+  3. Writing a custom handler for the built-in Logger that writes to
   file using FileWrite
 ```
 
@@ -406,15 +406,15 @@ def h(logFile: String, f: Unit -> a \ ef): a \ (ef - Logger) + FileWrite =
 
 Impressive!
 
-Next, I want to fix (2) by asking claude to use default handlers. This is a new
+Next, I want to fix (2) by asking Claude to use default handlers. This is a new
 feature that is barely used in any examples and only documented in the book. I prompt:
 
 ```prompt
-Refactor main to use default handlers for the built-in effects. 
+Refactor `main` to use default handlers for the built-in effects.
 
-Use run-with for the Logger effect and custom handler. 
+Use `run-with` for the `Logger` effect and custom handler.
 
-See @docs/doc.flix.dev/default-handlers.html for documentation. 
+See @docs/doc.flix.dev/default-handlers.html for documentation.
 ```
 
 At this point the dreaded "compacting conversation" happens. Lets see how it goes.
@@ -422,7 +422,7 @@ At this point the dreaded "compacting conversation" happens. Lets see how it goe
 After a bit of `Clauding...`:
 
 ```claude
-The error shows that Random doesn't have a default handler. 
+The error shows that `Random` doesn't have a default handler.
 Let me check the documentation more carefully:
 
 Read(docs/doc.flix.dev/default-handlers.html)
@@ -456,7 +456,7 @@ def main(): Unit \ {Console, IO, NonDet} =
 ```
 
 Ugh. This is not good. While the code works, its structure is terrible. A few
-things have gone wrong, which was partly our own fault: 
+things have gone wrong, which was partly our own fault:
 
 - We asked Claude to use default handlers for all effects. However, the
   `FileWrite` effect lacks a default handler because it can fail. Specifically,
@@ -467,12 +467,12 @@ things have gone wrong, which was partly our own fault:
 Let us try again, but this time we will be more specific:
 
 ```prompt
-I want you to refactor main. I want it to use a single run-with construct. 
-Let bind the result to a local variable called r. Inside the run, you 
-should call FileWrite.write and startGame. You should then use "with" to 
-install the handlers handleLoggerWithFile and Random.runWithIO. Lastly, 
-pattern match on the result r, and print an error message using 
-Console.println if it is Result.Err. 
+I want you to refactor `main`. I want it to use a single `run-with` construct.
+Let bind the result to a local variable called `r`. Inside the run, you
+should call `FileWrite.write` and `startGame`. You should then use "with" to
+install the handlers `handleLoggerWithFile` and `Random.runWithIO`. Lastly,
+pattern match on the result `r`, and print an error message using
+`Console.println` if it is `Result.Err`.
 ```
 
 Now Claude consults the Flix documentation to learn about `run-with` and produces: 
@@ -494,25 +494,25 @@ def main(): Unit \ {Console, IO, NonDet} =
 
 Much better. The example shows that Claude is able to program effectively (no
 pun intended!) with a rich collection of effects. Here we have a program that
-uses the `Console`, `FileWrite`,`Logger`, and `Random` effects. Embracing the
+uses the `Console`, `FileWrite`, `Logger`, and `Random` effects. Embracing the
 richness of the domain, we handle the `Logger` effect using
 `handleLoggerWithFile` which causes the `FileWrite` effect. We then handle the
-remaining effects using their associated `runWithIO` handlers which introduces the 
+remaining effects using their associated `runWithIO` handlers which introduces the
 _primitive_ effects `IO` and `NonDet`. 
 
 > **Aside 1:** The program here illustrates how in an effect-oriented programming
-> languages, effects are pushed outwards towards `main` where they must be handled·
-> That is to say, all the dependency injection and plumbing typically happens near main,
+> languages, effects are pushed outwards towards `main` where they must be handled.
+> That is to say, all the dependency injection and plumbing typically happens near `main`,
 > while most of the program remains pure modulo effects.
 
-> **Aside 2:** We might be disappointed that main is such complex. Why could we
-> not use default handlers for FileWrite and Random? The answer is two-fold.
-> With respect to Random, there is a limitation in Flix that prevents it. With
-> respect to FileWrite, the API pushes errors into the handler (instead of at the call sites),
-> hence we must deal with failure ourselves. (Here by printing the terminal). 
-> An alternative choice would have been to use FileWriteWithResult which would force
-> clients, i.e. the game, to deal with errors. Then we could have use a default handler 
-> in main at the cost of additional complexity within the game logic. 
+> **Aside 2:** We might be disappointed that `main` is so complex. Why could we
+> not use default handlers for `FileWrite` and `Random`? The answer is two-fold.
+> With respect to `Random`, there is a limitation in Flix that prevents it. With
+> respect to `FileWrite`, the API pushes errors into the handler (instead of at the call sites),
+> hence we must deal with failure ourselves. (Here by printing to the terminal).
+> An alternative choice would have been to use `FileWriteWithResult` which would force
+> clients, i.e. the game, to deal with errors. Then we could have used a default handler
+> in `main` at the cost of additional complexity within the game logic. 
 
 ## Overview
 
@@ -532,7 +532,7 @@ def main(): Unit \ {Console, IO, NonDet} =
 ```
 
 Note that Claude did a great job at not using `IO` anywhere except for in
-`main`. Moreover, each function only has the effects its reasonably needs. 
+`main`. Moreover, each function only has the effects it reasonably needs. 
 
 We can look at a few examples:
 
@@ -569,7 +569,7 @@ def promptGridSize(): Int32 \ Console =
 
 ## Lessons Learned
 
-I think they key lessons is that:
+I think the key lessons are that:
 
 - Giving Claude access to the Flix API and Book is invaluable. Claude is very
   good at consulting both the API and documentation when it needs to use a
@@ -584,12 +584,12 @@ snippets from the Flix Book, its impressive how well it did.
 
 ## Conclusions
 
-Returning to the beggining of the blog post. What will be impact of LLMs?
+Returning to the beginning of the blog post. What will be the impact of LLMs?
 
 Based on my six month experience with Claude, and as I tried to illustrate with
-the above example, it seems LLMs wilkl only help new programming languages.
+the above example, it seems LLMs will only help new programming languages.
 Given access to API documentation and human documentation, Claude is an
-excellent Flix programmer. And this is with minimal context. A CLAUDE.md file
+excellent Flix programmer. And this is with minimal context. A `CLAUDE.md` file
 that also pointed out some of Flix specific quirks would surely supercharge its
 abilities. 
 
