@@ -18,7 +18,7 @@ on programming language design, type and effect systems, and compilers.
 
 What I want to explore is whether a modern LLM — here, Claude Code (Opus 4.5) —
 is able to program in Flix, given that the amount of available Flix source code
-code is tiny compared to well-established languages like Python or Java.
+is tiny compared to established languages like Python or Java.
 
 I want to focus on one of Flix’s unique features: its support for
 **effect-oriented programming**. Will Claude be able to use it?
@@ -26,7 +26,7 @@ I want to focus on one of Flix’s unique features: its support for
 ## Experiment: Vibe Coding Tic-Tac-Toe
 
 We will Vibe Code a Tic-Tac-Toe game in Flix using Claude Code with the Opus 4.5
-model. We choose Tic-Tac-Toe because it is a well-defined game that require a
+model. We choose Tic-Tac-Toe because it is a well-defined game that requires a
 moderate use of effects. Vibe coding is harder because there is no working code
 base. 
 
@@ -38,8 +38,8 @@ cd tictactoe
 flix init
 ```
 
-Next, we are going to help Claude by downloading the entire 
-[Flix API](https://doc.flix.dev/) documentation and the 
+Next, we are going to help Claude by downloading the entire
+[Flix API](https://api.flix.dev/) documentation and the
 [Flix Book](https://doc.flix.dev/) documentation:
 
 ```sh
@@ -276,10 +276,10 @@ Claude have some old knowledge from papers?)
  I see! Key insights:
   1. Random.runWithIO introduces NonDet effect (which is uninterpretable)
   2. Random.runWithSeed(seed, f) handles Random without NonDet
-  3. No do keyword - effect operations are called directl
+  3. No do keyword - effect operations are called directly
 ```
 
-Clauded fixes these. A single type error remains:
+Claude fixes these. A single type error remains:
 
 Last error:
 
@@ -579,7 +579,7 @@ I think the key lessons are that:
 
 The code style Claude uses is not great, but it is also not terrible. In fact,
 considering that Claude was never given a single large program, but only
-snippets from the Flix Book, its impressive how well it did. 
+snippets from the Flix Book, it's impressive how well it did. 
 
 
 ## Conclusions
