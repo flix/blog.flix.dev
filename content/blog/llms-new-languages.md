@@ -21,19 +21,20 @@ In this post, I want to explore whether a modern LLM — here, Claude Code (Opus
 amount of training data, e.g. Flix source code, is tiny compared to what exists
 for languages like Python and JavaScript.
 
-Given that LLMs are reasonable at translating between natural languages, e.g.
-English to German, I think there is good reason to believe that LLMs can readily
-support new programming languages if they are syntactically and semantically
-similar to existing programming language. 
+Given that LLMs are reasonably good at translating between natural languages,
+e.g. from English to German, I think there is good reason to believe that they
+can also support new programming languages, if those languages are syntactically
+and semantically similar to existing ones. 
 
-But what happens when a new programming brings new syntax and semantics? For
-example, the Flix programming language is built around **effect-oriented
-programming**. Will Claude be able to understand and use that?
+But what happens when a new programming language introduces entirely new syntax
+and semantics? For example, the Flix programming language is built around
+**effect-oriented programming**. Will Claude be able to use that?
 
-> **Aside:** How much information about Flix is in Claude's training set?
-> Surely, Anthropic has scoped up several of research papers, source code, and
-> documentation. Yet, the Flix is rapidly evolving and so that information may
-> not be entirely up to date. 
+> **Aside:** How much information about Flix is actually in Claude’s training
+> set? Surely, Anthropic has scooped up our research papers, vacuumed our
+> documentation, and gobbled our source code. Yet Flix evolves rapidly, and some
+> information, e.g. from early research papers, may already be slightly
+> outdated.
 
 ## Experiment: Vibe Coding Tic-Tac-Toe
 
