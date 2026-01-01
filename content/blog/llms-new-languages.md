@@ -218,19 +218,20 @@ promising), Claude reports back with the full plan (which I have abbreviated):
  10. User Input Format ...
 ```
 
-Overall the plan looks reasonable, but there are a few issues:
+Overall, the plan looks reasonable, but there are a few issues:
 
 1. Claude wants to define its own `Logger` effect instead of using the `Logger`
   effect from the Standard Library with a custom effect handler.
 1. The `main` function, while reasonable, does not use the more idiomatic
-  `run-with` construct nor does it use default handlers.
-1. Claude wants to use records for `GameState` and `Move`. Typically this trips
+  `run-with` construct, nor does it use default handlers.
+1. Claude wants to use records for `GameState` and `Move`. This typically trips
   up Claude because Flix uses `rec#field` for field selection, not `rec.field`
   which is used for Java interoperability. 
 
-We give Claude instructions to resolve **(1)** and **(2)**, and warn about **(3)**. But
-instead, let us see how well Claude does without further help. Later, we can
-return and ask Claude to refactor **(1)** and **(2)**. We proceed:
+We _could_ give Claude instructions to resolve **(1)** and **(2)**, and warn
+about **(3)**. But instead, let us see how well Claude does without further
+help. Later, we can return and ask Claude to refactor **(1)** and **(2)**. We
+proceed:
 
 ```claude
 The plan is approved. Let me set up a task list and start implementing.
