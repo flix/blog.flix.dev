@@ -1,18 +1,18 @@
 +++
 title = "Will LLMs Help or Hurt New Programming Languages?"
-description = "A programming language researcher's perspective on how LLMs might impact the adoption of new programming languages."
-date = 2025-12-18
+description = "A perspective on how LLMs might impact the adoption of new programming languages."
+date = 2026-01-02
 authors = ["Magnus Madsen"]
 
 [taxonomies]
-tags = ["language-design", "llms", "flix"]
+tags = ["llms", "language-design", "flix"]
 +++
 
 Recently, I’ve seen several discussions revolve around the question:
 
 > **Will large language models (LLMs) help or hurt the adoption of new programming languages?**
 
-In this post, I will share my perspective on this question as the lead developer
+In this post, I will share my perspective as the lead developer
 of the [Flix programming language](https://flix.dev), and as an academic working
 on programming language design, type and effect systems, and compilers.
 
