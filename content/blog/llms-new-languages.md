@@ -521,24 +521,22 @@ in turn causes the `FileWrite` effect. We then handle the remaining effects
 using their associated `runWithIO` handlers, introducing the _primitive_ effects
 `IO` and `NonDet`. Lastly, `Console` is handled by its default effect handler. 
 
-> **Aside:** The program here illustrates how in an effect-oriented programming
-> languages, effects are pushed outwards towards `main` where they must be handled.
-> That is to say, all the dependency injection and plumbing typically happens near `main`,
-> while most of the program remains pure modulo effects.
+> **Aside:** This program illustrates how, in effect-oriented programming
+> languages, effects are pushed outwards toward `main`, where they must be
+> handled. In other words, all dependency injection and plumbing typically
+> happens near `main`, while most of the program remains pure modulo effects.
 
-We might be disappointed that `main` is so complex. Why could we not use default
-handlers for `FileWrite` and `Random`? The answer is two-fold. With respect to
-`Random`, there is a limitation in Flix that prevents it. With respect to
-`FileWrite`, the API pushes errors into the handler (instead of at the call
-sites), hence we must deal with failure ourselves. (Here by printing to the
-terminal). An alternative choice would have been to use `FileWriteWithResult`
-which would force clients, i.e. the game, to deal with errors. Then we could
-have used a default handler in `main` at the cost of additional complexity
-within the game logic. 
+We might be disappointed that `main` is still fairly complex. Why not use
+default handlers for `FileWrite` and `Random`? For `Random`, Flix has a
+limitation that prevents it. For `FileWrite`, errors are pushed to the handler
+rather than the call site, so we must handle them ourselves (here, by printing
+to the terminal). We could have used `FileWriteWithResult`, forcing the game to
+handle errors and allowing a default handler in `main`, but that would add
+complexity to the game logic.
 
-## Overview
+## Game API and Excerpts
 
-For reference here some of effectful functions of the game:
+For reference, here are some of the function signatures of the game:
 
 ```flix
 def aiMove(state: GameState): (Int32, Int32) \ Random =
@@ -547,14 +545,14 @@ def displayBoard(state: GameState): Unit \ Console =
 def parseInt(s: String): Option[Int32] =
 def promptGridSize(): Int32 \ Console =
 def promptMove(state: GameState): (Int32, Int32) \ Console =
-def handleLoggerWithFile(logFile: String, f: Unit -> a \ ef): a \ (ef - Logger) + FileWrite =
 def gameLoop(state: GameState): GameResult \ {Console, Logger, Random} =
 def startGame(): Unit \ {Console, Logger, Random} =
 def main(): Unit \ {Console, IO, NonDet} =
 ```
 
-Note that Claude did a great job at not using `IO` anywhere except for in
-`main`. Moreover, each function only has the effects it reasonably needs. 
+Claude has done a solid job breaking the game into smaller functions, each using
+only the effects it needs. Notably, the `IO` effect is only used by `main`. This
+is the essence of _effect-oriented programming_, and Claude has achieved it. 
 
 We can look at a few examples:
 
@@ -574,7 +572,7 @@ def startGame(): Unit \ {Console, Logger, Random} =
 Here `startGame` has the `Console`, `Logger`, and `Random` effects. `Console` is
 used directly, whereas `Logger` and `Random` are used by `gameLoop`. 
 
-Here is the function that asks for the size of the grid:
+And here is the `promptGridSize` function:
 
 ```flix
 def promptGridSize(): Int32 \ Console =
@@ -591,33 +589,30 @@ def promptGridSize(): Int32 \ Console =
 
 ## Lessons Learned
 
-I think the key lessons are that:
+I think the key lessons are:
 
-- Giving Claude access to the Flix API and Book is invaluable. Claude is very
-  good at consulting both the API and documentation when it needs to use a
-  feature or encounters a problem. 
-- Letting Claude run the compiler repeatedly is very helpful. Moreover, the Flix
-  compiler being highly resilient allows Claude to discover and fix many errors in one go; meaning that only few compilations are actually required. 
+- Giving Claude access to the newest Flix API reference and documentation is
+  invaluable. Claude is surprisingly good at consulting both whenever it needs
+  to use a feature or runs into a problem.
+- Giving Claude access to the compiler is must. Furthermore, the Flix compiler's
+  resilience allows Claude to discover and correct multiple issues in one pass. 
 
-The code style Claude uses is not great, but it is also not terrible. In fact,
-considering that Claude was never given a single large program, but only
-snippets from the Flix Book, it's impressive how well it did. 
-
+Claude’s code style isn’t great. I’d call it unopinionated, which feels a bit
+odd—but perhaps makes sense, given that there isn’t yet a defined Flix style. In
+the future, I’d like to explore whether giving Claude a style guide would help.
 
 ## Conclusions
 
-Returning to main question of the blog post: 
+Returning to the central question of this blog post: 
 
 > **Will large language models (LLMs) help or hurt the adoption of new programming languages?**
 
-Based on my personal experience, I think the LLMs will help the adoption of new
-programming languages. In this blog post, we have seen that by giving Claude
-access to the Flix compiler together with Flix API and language documentation it
-becomes a decent Flix programmer. 
+Based on my experience, I believe LLMs will help the adoption of new languages.
+We've seen that by giving Claude access to the Flix API reference,
+documentation, and the Flix compiler, it can become a farily capable Flix
+programmer. 
 
 We saw that Claude struggle slightly on some specific aspects, but with a
 well-crafted `CLAUDE.md` these misunderstandings can easily be cleared up.
-
-In my view, the future of new programming languages looks as bright as ever. 
 
 Until next time, happy Clauding.
