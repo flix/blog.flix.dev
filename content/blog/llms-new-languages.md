@@ -607,12 +607,17 @@ Returning to the central question of this blog post:
 
 > **Will large language models (LLMs) help or hurt the adoption of new programming languages?**
 
-Based on my experience, I believe LLMs will help the adoption of new languages.
-We've seen that by giving Claude access to the Flix API reference,
-documentation, and the Flix compiler, it can become a farily capable Flix
-programmer. 
+Based on my experience over the past six months, I’m convinced that LLMs will
+only help the adoption of new languages. We’ve seen that by giving Claude access
+to the Flix API reference, documentation, and compiler, it can become a capable
+Flix programmer. 
 
-We saw that Claude struggle slightly on some specific aspects, but with a
-well-crafted `CLAUDE.md` these misunderstandings can easily be cleared up.
+While Claude makes silly syntax mistakes, which would not happen for Python or
+JavaScript, it can usually overcome them. More impressively, Claude is already
+capable of _effect-oriented programming_. It can write functions that use
+effects, functions that handle effects, and even intricate effect polymorphic
+functions such as `handleLoggerWithFile`. 
+
+Thus, I think, the future for new programming languages is as bright as ever.
 
 Until next time, happy Clauding.
