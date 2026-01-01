@@ -50,9 +50,9 @@ information we put into its context.
 We begin by creating an empty Flix project:
 
 ```sh
-mkdir tictactoe
-cd tictactoe
-flix init
+$ mkdir tictactoe
+$ cd tictactoe
+$ flix init
 ```
 
 Next, we are going to help Claude by downloading the entire
@@ -60,10 +60,10 @@ Next, we are going to help Claude by downloading the entire
 [Flix Book](https://doc.flix.dev/) documentation:
 
 ```sh
-mkdir -p docs
-cd docs/
-wget -r -np -k https://api.flix.dev/
-wget -r -np -k https://doc.flix.dev/
+$ mkdir -p docs
+$ cd docs/
+$ wget -r -np -k https://api.flix.dev/
+$ wget -r -np -k https://doc.flix.dev/
 ```
 
 The two downloads take a few minutes. If you’re reading this blog post, you have
@@ -302,7 +302,10 @@ But now, Claude runs into its first effect-related issues:
   3. No do keyword - effect operations are called directly
 ```
 
-Claude quickly fixes these. A single error remains:
+There are two issues: First, the `Random.runWithIO` handler has **both** the
+`IO` and `NonDet` effects which must be part of the effect signature of `main`.
+Second, Flix no longer uses the `do` keyword to invoke an effect operation.
+Surprisingly, Claude quickly overcomes both issues. A single error remains:
 
 ```claude
 Good progress! Just one error left - 
@@ -312,7 +315,7 @@ Good progress! Just one error left -
 And done! The program compiles. Lets try to run it:
 
 ```sh
-flix run 
+$ flix run 
 
 Welcome to Tic-Tac-Toe!
 ======================
