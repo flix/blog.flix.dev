@@ -8,17 +8,18 @@ authors = ["Magnus Madsen"]
 tags = ["llms", "language-design", "flix"]
 +++
 
-Recently, I’ve seen several discussions revolve around the question:
+Recently, I've seen a number of discussions circle around the same question:
 
 > **Will large language models (LLMs) help or hurt the adoption of new programming languages?**
 
-In this post, I will share my experience as the lead developer
-of the [Flix programming language](https://flix.dev), and as an academic working
-on programming language design, type and effect systems, and compilers.
+It is a fair and timely question. As an academic researcher in programming
+language design and theory, and as the lead developer of the [Flix programming
+language](https://flix.dev), will I soon be out of a job? Well, maybe not!
 
-What I want to explore is whether a modern LLM — here, Claude Code (Opus 4.5) —
-is able to program in Flix, given that the amount of available Flix source code
-is tiny compared to say the amount of available Python or JavaScript source code.
+In this post, I want to explore whether a modern LLM — here, Claude Code (Opus
+4.5) — is able to program in Flix. This is an interesting question because the
+amount of training data, e.g. Flix source code, is tiny compared to what exists
+for languages like Python and JavaScript.
 
 Given that LLMs are reasonable at translating between natural languages, e.g.
 English to German, I think there is good reason to believe that LLMs can readily
