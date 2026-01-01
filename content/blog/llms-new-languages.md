@@ -12,16 +12,27 @@ Recently, I’ve seen several discussions revolve around the question:
 
 > **Will large language models (LLMs) help or hurt the adoption of new programming languages?**
 
-In this post, I will share my perspective as the lead developer
+In this post, I will share my experience as the lead developer
 of the [Flix programming language](https://flix.dev), and as an academic working
 on programming language design, type and effect systems, and compilers.
 
 What I want to explore is whether a modern LLM — here, Claude Code (Opus 4.5) —
 is able to program in Flix, given that the amount of available Flix source code
-is tiny compared to established languages like Python or Java.
+is tiny compared to say the amount of available Python or JavaScript source code.
 
-I want to focus on one of Flix’s unique features: its support for
-**effect-oriented programming**. Will Claude be able to use it?
+Given that LLMs are reasonable at translating between natural languages, e.g.
+English to German, I think there is good reason to believe that LLMs can readily
+support new programming languages if they are syntactically and semantically
+similar to existing programming language. 
+
+But what happens when a new programming brings new syntax and semantics? For
+example, the Flix programming language is built around **effect-oriented
+programming**. Will Claude be able to understand and use that?
+
+> **Aside:** How much information about Flix is in Claude's training set?
+> Surely, Anthropic has scoped up several of research papers, source code, and
+> documentation. Yet, the Flix is rapidly evolving and so that information may
+> not be entirely up to date. 
 
 ## Experiment: Vibe Coding Tic-Tac-Toe
 
