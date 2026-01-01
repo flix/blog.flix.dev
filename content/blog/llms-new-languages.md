@@ -56,7 +56,7 @@ flix init
 ```
 
 Next, we are going to help Claude by downloading the entire
-[Flix API](https://api.flix.dev/) documentation and the
+[Flix API](https://api.flix.dev/) reference and the
 [Flix Book](https://doc.flix.dev/) documentation:
 
 ```sh
@@ -66,8 +66,8 @@ wget -r -np -k https://api.flix.dev/
 wget -r -np -k https://doc.flix.dev/
 ```
 
-The two downloads take a few minutes. If you are reading this blog post, you
-have my permission to crawl our documentation like the above. 
+The two downloads take a few minutes. If you’re reading this blog post, you have
+my permission to crawl our documentation just like we did above.
 
 Next, we create a `CLAUDE.md` file with the following text:
 
@@ -98,6 +98,9 @@ Flix has an effect system. Documentation is in `docs/doc.flix.dev/`:
 - `effects-and-handlers.html` - Effects and handlers
 ```
 
+We explicitly instruct Claude on how to run the compiler and what documentation
+to consult about the effect system. 
+
 We can now start. We run `claude` and enter `plan` mode. 
 
 We give it the following prompt:
@@ -105,7 +108,7 @@ We give it the following prompt:
 ```prompt
 Let us write a tictactoe game in Flix. The game should ask the user for 
 a grid size (e.g. 3x3 or 4x4) and then prompt the user for a move. Check 
-that the move is valid according to the rules of Tic-Tac-Toe. After each 
+that the move is valid according to the rules of tictactoe. After each 
 player move, the AI makes a valid move. A player wins when they have 
 three consecutive x's or o's. 
 
@@ -143,18 +146,20 @@ How sophisticated should the AI opponent be?
      Optimal AI that never loses - more complex implementation
 ```
 
-Initially, I wanted to pick **(3)**. However, picking **(1)** is more challenging
-because that will require Claude to use the `Random` effect whose handler
-introduces the primitive `NonDet` effect. Claude will have to figure this out
-for itself. We make our choice and:
+Initially, I wanted to pick **(3)**. However, choosing **(1)** is actually more
+challenging, because it requires Claude to use the `Random` effect, whose
+handler introduces the primitive `NonDet` effect. Claude will have to figure
+this out on its own. 
+
+We make our choice:
 
 ```claude
 Now I have clear requirements. Let me design the implementation plan.
 ```
 
-After about seven minutes of `Clauding...`, which involves Claude reading both
-the Flix API and Book, including `Random.html` (which looks promising), Claude
-reports back with the full plan (which I have abbreviated):
+After about seven minutes of `Clauding...`, which involves reading both the Flix
+API reference and documentation, including `Random.html` (which looks
+promising), Claude reports back with the full plan (which I have abbreviated):
 
 ```flix
  1. Data Type Definitions 
