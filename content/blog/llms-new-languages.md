@@ -8,7 +8,7 @@ authors = ["Magnus Madsen"]
 tags = ["llms", "language-design", "flix"]
 +++
 
-Recently, I've seen a number of discussions circle around the same question:
+Recently, I’ve seen a number of discussions circle around the same question:
 
 > **Will large language models (LLMs) help or hurt the adoption of new programming languages?**
 
@@ -110,7 +110,7 @@ Let us write a tictactoe game in Flix. The game should ask the user for
 a grid size (e.g. 3x3 or 4x4) and then prompt the user for a move. Check 
 that the move is valid according to the rules of tictactoe. After each 
 player move, the AI makes a valid move. A player wins when they have 
-three consecutive x's or o's. 
+three consecutive x’s or o’s. 
 
 Use the Console effect for user input and output. Use a functional data
 structure to store the game state.
@@ -127,7 +127,7 @@ The prompt is reasonable, but not very polished. We let Claude chew on the
 instructions and it comes back with: 
 
 ```claude
-I'll help you create a Tic-Tac-Toe game in Flix. 
+I’ll help you create a Tic-Tac-Toe game in Flix. 
 
 Let me first explore the Flix documentation to understand the effect 
 system, Console, and FileWrite APIs.
@@ -245,7 +245,7 @@ name resolution errors, and type errors). Claude says:
 I see several issues. The main ones are:
   1. Logger is already defined in the standard library - 
     I need to rename it to GameLogger
-  2. The backtick syntax doesn't work with qualified names - 
+  2. The backtick syntax doesn’t work with qualified names - 
     need to use Int32.mod(index, size)
 ```
 
@@ -376,12 +376,12 @@ Looks alright!
 
 ## Refactoring the Game
 
-Let's return to our TODO list. We wanted Claude to address two issues:
+Let’s return to our TODO list. We wanted Claude to address two issues:
 
 1. Claude was using its own `GameLogger` effect, but we wanted it to use the built-in `Logger` effect with a custom handler.
 1. The `main` entry point is correct, but written in a non-idiomatic style.  
 
-Let's start with **(1)**. We prompt Claude:
+Let’s start with **(1)**. We prompt Claude:
 
 ```prompt
 Refactor the project to use the built-in Logger effect.
@@ -437,12 +437,12 @@ Use run-with for the Logger effect and custom handler.
 See @docs/doc.flix.dev/default-handlers.html for documentation.
 ```
 
-At this point the dreaded "compacting conversation" happens. Let's see how it goes.
+At this point the dreaded "compacting conversation" happens. Let’s see how it goes.
 
 After a bit of `Clauding...`:
 
 ```claude
-The error shows that `Random` doesn't have a default handler.
+The error shows that `Random` doesn’t have a default handler.
 Let me check the documentation more carefully:
 
 Read(docs/doc.flix.dev/default-handlers.html)
@@ -594,7 +594,7 @@ I think the key lessons are:
 - Giving Claude access to the newest Flix API reference and documentation is
   invaluable. Claude is surprisingly good at consulting both whenever it needs
   to use a feature or runs into a problem.
-- Giving Claude access to the compiler is must. Furthermore, the Flix compiler's
+- Giving Claude access to the compiler is must. Furthermore, the Flix compiler’s
   resilience allows Claude to discover and correct multiple issues in one pass. 
 
 Claude’s code style isn’t great. I’d call it unopinionated, which feels a bit
