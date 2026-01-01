@@ -401,7 +401,7 @@ I now understand the built-in Logger API. The refactoring involves:
 Notably Claude has figured out that it has to write its own handler for `Logger`
 which _itself_ uses the `FileWrite` effect. 
 
-I ask Claude to continue. The refactoring is successful. The `GameLogger` effect
+I ask Claude to continue. The refactoring is successful: the `GameLogger` effect
 is removed and `Logger` is used. The new custom handler is:
 
 ```flix
@@ -418,9 +418,8 @@ def h(logFile: String, f: Unit -> a \ ef): a \ (ef - Logger) + FileWrite =
     }
 ```
 
-Notably, Claude has figured out the correct syntax for an effect polymorphic
-function that handles `Logger` while causing the `FileWrite` effect, i.e. the
-signature: 
+Claude has figured out the correct syntax for an effect polymorphic function
+that handles `Logger` while causing the `FileWrite` effect, i.e. the signature: 
 
 ```flix
 def h(logFile: String, f: Unit -> a \ ef): a \ (ef - Logger) + FileWrite = 
@@ -428,8 +427,7 @@ def h(logFile: String, f: Unit -> a \ ef): a \ (ef - Logger) + FileWrite =
 
 Impressive!
 
-Next, I want to fix **(2)** by asking Claude to use default handlers. This is a new
-feature that is barely used in any examples and only documented in the book. I prompt:
+Next, I want to fix **(2)**, i.e. improve the style of `main`. I prompt:
 
 ```prompt
 Refactor main to use default handlers for the built-in effects.
@@ -439,7 +437,7 @@ Use run-with for the Logger effect and custom handler.
 See @docs/doc.flix.dev/default-handlers.html for documentation.
 ```
 
-At this point the dreaded "compacting conversation" happens. Lets see how it goes.
+At this point the dreaded "compacting conversation" happens. Let's see how it goes.
 
 After a bit of `Clauding...`:
 
@@ -477,14 +475,15 @@ def main(): Unit \ {Console, IO, NonDet} =
     )
 ```
 
-Ugh. This is not good. While the code works, its structure is terrible. A few
-things have gone wrong, which was partly our own fault:
+**Ugh.** _This is not good._ While the code is technically correct, its
+structure is terrible. A few things have gone wrong, partly due to my own
+instructions:
 
-- We asked Claude to use default handlers for all effects. However, the
-  `FileWrite` effect lacks a default handler because it can fail. Specifically,
+- I asked Claude to use default handlers for all effects. However, the
+  `FileWrite` effect has no default handler because it can fail. In particular,
   `FileWrite.runWithIO` returns a `Result[IoError, Unit]`. Claude, in its
-  infinite wisdom, decided that we should just discard the `Result`.
-- We asked Claude to use the `run-with` construct, but it simply ignored us. 
+  infinite wisdom, decided that we should simply discard the `Result` 🤡 
+- I asked Claude to use the `run-with` construct, but it did not.
 
 Let us try again, but this time we will be more specific:
 
@@ -514,13 +513,13 @@ def main(): Unit \ {Console, IO, NonDet} =
     }
 ```
 
-Much better. The example shows that Claude is able to program effectively (no
-pun intended!) with a rich collection of effects. Here we have a program that
-uses the `Console`, `FileWrite`, `Logger`, and `Random` effects. Embracing the
-richness of the domain, we handle the `Logger` effect using
-`handleLoggerWithFile` which causes the `FileWrite` effect. We then handle the
-remaining effects using their associated `runWithIO` handlers which introduces the
-_primitive_ effects `IO` and `NonDet`. 
+Much better. This example shows that Claude is able to program effectively (no
+pun intended!) with a rich collection of effects. The program uses the
+`Console`, `FileWrite`, `Logger`, and `Random` effects. Embracing the richness
+of the domain, we handle the `Logger` effect using `handleLoggerWithFile`, which
+in turn causes the `FileWrite` effect. We then handle the remaining effects
+using their associated `runWithIO` handlers, introducing the _primitive_ effects
+`IO` and `NonDet`. Lastly, `Console` is handled by its default effect handler. 
 
 > **Aside:** The program here illustrates how in an effect-oriented programming
 > languages, effects are pushed outwards towards `main` where they must be handled.
