@@ -38,10 +38,14 @@ and semantics? For example, the Flix programming language is built around
 
 ## Experiment: Vibe Coding Tic-Tac-Toe
 
-We will Vibe Code a Tic-Tac-Toe game in Flix using Claude Code with the Opus 4.5
-model. We choose Tic-Tac-Toe because it is a well-defined game that requires a
-moderate use of effects. Vibe coding is harder because there is no working code
-base. 
+Today, we will "Vibe Code" (I dislike that term) a Tic-Tac-Toe game in Flix
+using Claude Code with the Opus 4.5 model. I chose Tic-Tac-Toe because it is a
+well-defined game that requires a moderate use of effects.
+
+My intuition is that writing a new Flix program from scratch is harder for an
+LLM because there is no codebase it can gradually evolve, where the exsting
+syntax and semantics can serve as examples. There is only the LLM itself and any
+information we put into its context. 
 
 We begin by creating an empty Flix project:
 
