@@ -358,11 +358,7 @@ AI plays at (3, 2)
 Player O wins!
 ```
 
-And I lost! 
-
-Recall that we asked Claude to log all moves. Lets see if it did so. 
-
-The `game_log` file is there:
+Recall that we asked Claude to log all moves. There is a `game_log` file:
 
 ```txt
 === Tic-Tac-Toe Game Log ===
@@ -376,21 +372,22 @@ X played at (2, 1)
 O played at (3, 2)
 ```
 
+Looks alright!
+
 ## Refactoring the Game
 
-Let us return to our own TODO list. We wanted Claude to fix two issues:
+Let's return to our TODO list. We wanted Claude to address two issues:
 
-1. Claude was using its own `GameLogger` effect, but we wanted it to use the
-   built-in `Logger` effect, but with a custom handler.
-1. The `main` entry point is correct, but non-idiomatic. 
+1. Claude was using its own `GameLogger` effect, but we wanted it to use the built-in `Logger` effect with a custom handler.
+1. The `main` entry point is correct, but written in a non-idiomatic style.  
 
-Let us start with **(1)**. We prompt Claude:
+Let's start with **(1)**. We prompt Claude:
 
 ```prompt
 Refactor the project to use the built-in Logger effect.
 ```
 
-Claude consults the Flix API and Book again. 
+Claude consults the Flix API reference and documentation.
 
 ```claude
 I now understand the built-in Logger API. The refactoring involves:
@@ -402,9 +399,10 @@ I now understand the built-in Logger API. The refactoring involves:
 ```
 
 Notably Claude has figured out that it has to write its own handler for `Logger`
-which _itself_ uses the `FileWrite` effect. I ask Claude to continue. The
-refactoring is successful. The `GameLogger` effect is removed and `Logger` is
-used. The new custom handler is:
+which _itself_ uses the `FileWrite` effect. 
+
+I ask Claude to continue. The refactoring is successful. The `GameLogger` effect
+is removed and `Logger` is used. The new custom handler is:
 
 ```flix
 // Named "handleLoggerWithFile" but renamed to h to fit on the screen.
