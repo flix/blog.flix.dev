@@ -1,0 +1,623 @@
++++
+title = "Will LLMs Help or Hurt New Programming Languages?"
+description = "A perspective on how LLMs might impact the adoption of new programming languages."
+date = 2026-01-02
+authors = ["Magnus Madsen"]
+
+[taxonomies]
+tags = ["llms", "language-design", "flix"]
++++
+
+Recently, I’ve seen a number of discussions circle around the same question:
+
+> **Will large language models (LLMs) help or hurt the adoption of new programming languages?**
+
+It is a fair and timely question. As an academic researcher in programming
+language design and theory, and as the lead developer of the [Flix programming
+language](https://flix.dev), will I soon be out of a job? Well, maybe not!
+
+In this post, I want to explore whether a modern LLM — here, Claude Code (Opus
+4.5) — is able to program in Flix. This is an interesting question because the
+amount of training data, e.g. Flix source code, is tiny compared to what exists
+for languages like Python and JavaScript.
+
+Given that LLMs are reasonably good at translating between natural languages,
+e.g. from English to German, I think there is good reason to believe that they
+can also support new programming languages, if those languages are syntactically
+and semantically similar to existing ones. 
+
+But what happens when a new programming language introduces entirely new syntax
+and semantics? For example, the Flix programming language is built around
+**effect-oriented programming**. Will Claude be able to use that?
+
+> **Aside:** How much information about Flix is actually in Claude’s training
+> set? Surely, Anthropic has scooped up our research papers, vacuumed our
+> documentation, and gobbled our source code. Yet Flix evolves rapidly, and some
+> information, e.g. from early research papers, may already be slightly
+> outdated.
+
+## Experiment: Vibe Coding Tic-Tac-Toe
+
+Today, we will "Vibe Code" (I dislike that term) a Tic-Tac-Toe game in Flix
+using Claude Code with the Opus 4.5 model. I chose Tic-Tac-Toe because it is a
+well-defined game that requires a moderate use of effects.
+
+My intuition is that writing a new Flix program from scratch is harder for an
+LLM because there is no codebase it can gradually evolve, where the exsting
+syntax and semantics can serve as examples. There is only the LLM itself and any
+information we put into its context. 
+
+We begin by creating an empty Flix project:
+
+```sh
+$ mkdir tictactoe
+$ cd tictactoe
+$ flix init
+```
+
+Next, we are going to help Claude by downloading the entire
+[Flix API](https://api.flix.dev/) reference and the
+[Flix Book](https://doc.flix.dev/) documentation:
+
+```sh
+$ mkdir -p docs
+$ cd docs/
+$ wget -r -np -k https://api.flix.dev/
+$ wget -r -np -k https://doc.flix.dev/
+```
+
+The two downloads take a few minutes. If you’re reading this blog post, you have
+my permission to crawl our documentation just like we did above.
+
+Next, we create a `CLAUDE.md` file with the following text:
+
+```markdown
+# Overview
+
+This is project is written in the Flix programming language.
+
+## Documentation
+
+- **API Reference**: `docs/api.flix.dev/`
+- **Documentation**: `docs/doc.flix.dev/`
+
+## Flix Compiler Commands
+
+The `flix` compiler is available on PATH and supports the following commands:
+
+- `flix check` - Check code for errors
+- `flix run` - Run the project
+
+## Effect System
+
+Flix has an effect system. Documentation is in `docs/doc.flix.dev/`:
+
+- `effect-system.html` - Core effect system concepts
+- `effect-polymorphism.html` - Effect polymorphism
+- `effect-oriented-programming.html` - Effect-oriented programming
+- `effects-and-handlers.html` - Effects and handlers
+```
+
+We explicitly instruct Claude on how to run the compiler and what documentation
+to consult about the effect system. 
+
+We can now start. We run `claude` and enter `plan` mode. 
+
+We give it the following prompt:
+
+```prompt
+Let us write a tictactoe game in Flix. The game should ask the user for 
+a grid size (e.g. 3x3 or 4x4) and then prompt the user for a move. Check 
+that the move is valid according to the rules of tictactoe. After each 
+player move, the AI makes a valid move. A player wins when they have 
+three consecutive x’s or o’s. 
+
+Use the Console effect for user input and output. Use a functional data
+structure to store the game state.
+
+Use a recursive function for the game loop.
+
+Use the Logger effect to log all moves in the game. Write your own custom
+handler for Logger that writes to a logfile using the FileWrite effect.
+
+Consult the Flix documentation as necessary during planning.
+```
+
+The prompt is reasonable, but not very polished. We let Claude chew on the
+instructions and it comes back with: 
+
+```claude
+I’ll help you create a Tic-Tac-Toe game in Flix. 
+
+Let me first explore the Flix documentation to understand the effect 
+system, Console, and FileWrite APIs.
+```
+
+After a few minutes, we are asked a few questions, including:
+
+```claude
+How sophisticated should the AI opponent be?
+
+❯ 1. Random valid moves
+     AI picks any random empty cell - simple to implement
+  2. Basic strategy
+     AI blocks wins and takes winning moves when available
+  3. Minimax algorithm
+     Optimal AI that never loses - more complex implementation
+```
+
+Initially, I wanted to pick **(3)**. However, choosing **(1)** is actually more
+challenging, because it requires Claude to use the `Random` effect, whose
+handler introduces the primitive `NonDet` effect. Claude will have to figure
+this out on its own. 
+
+We make our choice:
+
+```claude
+Now I have clear requirements. Let me design the implementation plan.
+```
+
+After about seven minutes of `Clauding...`, which involves reading both the Flix
+API reference and documentation, including `Random.html` (which looks
+promising), Claude reports back with the full plan (which I have abbreviated):
+
+```flix
+ 1. Data Type Definitions 
+ ...
+ type alias GameState = { board = Board, size = Int32, currentPlayer = Player, moveCount = Int32 }
+ type alias Move = { player = Player, row = Int32, col = Int32 }
+ ...
+
+ 2. Custom Logger Effect
+
+ eff Logger {
+     def logMove(m: Move): Unit
+ }
+
+ 3. Core Functions ...
+
+ 4. I/O Functions ...
+
+ 5. Logger Handler with FileWrite
+
+ def handleLoggerWithFile(logFile: String, f: Unit -> a \ ef): a \ (ef - Logger) + FileWrite =
+     run {
+         f()
+     } with handler Logger {
+         def logMove(m, resume) = {
+             let line = "${m.player} played at (${m.row + 1}, ${m.col + 1})\n";
+             FileWrite.append({str = line}, logFile);
+             resume()
+         }
+     }
+
+ 6. Recursive Game Loop
+
+ def gameLoop(state: GameState): GameResult \ {Console, Logger, Random} = ...
+
+ 7. Main Entry Point
+
+ def main(): Unit \ IO =
+     let logFile = "game_log.txt";
+     FileWrite.runWithIO(() ->
+         handleLoggerWithFile(logFile, () ->
+             Random.runWithIO(() ->
+                 Console.runWithIO(() ->
+                     startGame()
+                 )
+             )
+         )
+     ) |> ignore
+
+ Effect handling order (inner to outer): Console -> Random -> Logger -> FileWrite -> IO
+
+ 8. Implementation Steps ...
+
+ 9. Win Detection Strategy ...
+
+ 10. User Input Format ...
+```
+
+Overall, the plan looks reasonable, but there are a few issues:
+
+1. Claude wants to define its own `Logger` effect instead of using the `Logger`
+  effect from the Standard Library with a custom effect handler.
+1. The `main` function, while reasonable, does not use the more idiomatic
+  `run-with` construct, nor does it use default handlers.
+1. Claude wants to use records for `GameState` and `Move`. This typically trips
+  up Claude because Flix uses `rec#field` for field selection, not `rec.field`
+  which is used for Java interoperability. 
+
+We _could_ give Claude instructions to resolve **(1)** and **(2)**, and warn
+about **(3)**. But instead, let us see how well Claude does without further
+help. Later, we can return and ask Claude to refactor **(1)** and **(2)**. We
+proceed:
+
+```claude
+The plan is approved. Let me set up a task list and start implementing.
+```
+
+Claude generates about 350 lines of code and asks for permission to use the Flix
+compiler which I grant. The project contains 20+ errors (including parse errors,
+name resolution errors, and type errors). Claude says: 
+
+```claude
+I see several issues. The main ones are:
+  1. Logger is already defined in the standard library - 
+    I need to rename it to GameLogger
+  2. The backtick syntax doesn’t work with qualified names - 
+    need to use Int32.mod(index, size)
+```
+
+Claude has discovered that `Logger` is already defined, so it (incorrectly)
+decides to rename its own `Logger` to `GameLogger`. Claude also incorrectly
+assumed that Flix has infix syntax for modulo (i.e., `x % y`), but discovered
+that it should instead use `Int32.mod`. While encountering these issues, Claude
+is using both the Flix API reference and documentation to fix them.
+
+> **Aside:** The Flix compiler is highly resilient, so each compilation phase
+> can proceed to the next, even if the program contains errors. In fact, about
+> 95% of compilation errors are recoverable. As a result, for a program
+> generated by an LLM with multiple errors, Flix can report all of them at once,
+> allowing the LLM to fix multiple issues in one pass.
+
+Claude makes several changes and reruns the compiler. Now it gets:
+
+```claude
+>> Unable to unify the types: 'Player' and 'JvmToType(j0)'.
+
+286 |             match state.currentPlayer {
+                        ^^^^^^^^^^^^^^^^^^^
+```
+
+The error message is not great — we are working on it — the problem is that the
+syntax `state.currentPlayer` means to read the `currentPlayer` field on a Java
+_object_, but `state` is a Flix _extensible record_. Undauted, Claude continues: 
+
+```claude
+I see several issues. 
+
+Let me check the Flix documentation for the correct syntax:
+
+I see! In Flix, record field access uses # not .. So state.size 
+should be state#size. 
+
+Let me also search for the correct modulo syntax:
+
+ Now I understand. Let me rewrite the file with the correct syntax:
+  - Record access: state#size instead of state.size
+  - Modulo: Int32.modulo(index, size)
+```
+
+So far, all problems have been purely syntactic. 
+
+But now, Claude runs into its first effect-related issues:
+
+```claude
+...
+
+ I see! Key insights:
+  1. Random.runWithIO introduces NonDet effect (which is uninterpretable)
+  2. Random.runWithSeed(seed, f) handles Random without NonDet
+  3. No do keyword - effect operations are called directly
+```
+
+There are two issues: First, the `Random.runWithIO` handler has **both** the
+`IO` and `NonDet` effects which must be part of the effect signature of `main`.
+Second, Flix no longer uses the `do` keyword to invoke an effect operation.
+Surprisingly, Claude quickly overcomes both issues. A single error remains:
+
+```claude
+Good progress! Just one error left - 
+    String.split already returns a List, not a Vector. Let me fix that:
+```
+
+And done! The program compiles. Lets try to run it:
+
+```sh
+$ flix run 
+
+Welcome to Tic-Tac-Toe!
+======================
+Enter grid size (3-9):
+3
+
+Starting 3x3 game. You are X, AI is O.
+Get 3 in a row to win!
+
+   1 2 3
+1  . . .
+2  . . .
+3  . . .
+Your turn (X):
+Enter your move (row col), e.g., '1 2':
+1 2 
+   1 2 3
+1  . X .
+2  . . .
+3  . . .
+AI is thinking...
+AI plays at (3, 3)
+   1 2 3
+1  . X .
+2  . . .
+3  . . O
+
+... 
+
+   1 2 3
+1  X X O
+2  X X .
+3  O . O
+AI is thinking...
+AI plays at (3, 2)
+   1 2 3
+1  X X O
+2  X X .
+3  O O O
+Player O wins!
+```
+
+Recall that we asked Claude to log all moves. There is a `game_log` file:
+
+```txt
+=== Tic-Tac-Toe Game Log ===
+X played at (1, 2)
+O played at (3, 3)
+X played at (1, 1)
+O played at (1, 3)
+X played at (2, 2)
+O played at (3, 1)
+X played at (2, 1)
+O played at (3, 2)
+```
+
+Looks alright!
+
+## Refactoring the Game
+
+Let’s return to our TODO list. We wanted Claude to address two issues:
+
+1. Claude was using its own `GameLogger` effect, but we wanted it to use the built-in `Logger` effect with a custom handler.
+1. The `main` entry point is correct, but written in a non-idiomatic style.  
+
+Let’s start with **(1)**. We prompt Claude:
+
+```prompt
+Refactor the project to use the built-in Logger effect.
+```
+
+Claude consults the Flix API reference and documentation.
+
+```claude
+I now understand the built-in Logger API. The refactoring involves:
+
+  1. Removing the custom GameLogger effect
+  2. Using Logger.info(message) instead of GameLogger.logMove(move)
+  3. Writing a custom handler for the built-in Logger that writes to
+  file using FileWrite
+```
+
+Notably Claude has figured out that it has to write its own handler for `Logger`
+which _itself_ uses the `FileWrite` effect. 
+
+I ask Claude to continue. The refactoring is successful: the `GameLogger` effect
+is removed and `Logger` is used. The new custom handler is:
+
+```flix
+// Named "handleLoggerWithFile" but renamed to h to fit on the screen.
+def h(logFile: String, f: Unit -> a \ ef): a \ (ef - Logger) + FileWrite =
+    run {
+        f()
+    } with handler Logger {
+        def log(severity, msg, resume) = {
+            let line = "[${severity}] ${msg}\n";
+            FileWrite.append({str = line}, logFile);
+            resume()
+        }
+    }
+```
+
+Claude has figured out the correct syntax for an effect polymorphic function
+that handles `Logger` while causing the `FileWrite` effect, i.e. the signature: 
+
+```flix
+def h(logFile: String, f: Unit -> a \ ef): a \ (ef - Logger) + FileWrite = 
+```
+
+Impressive!
+
+Next, I want to fix **(2)**, i.e. improve the style of `main`. I prompt:
+
+```prompt
+Refactor main to use default handlers for the built-in effects.
+
+Use run-with for the Logger effect and custom handler.
+
+See @docs/doc.flix.dev/default-handlers.html for documentation.
+```
+
+At this point the dreaded "compacting conversation" happens. Let’s see how it goes.
+
+After a bit of `Clauding...`:
+
+```claude
+The error shows that `Random` doesn’t have a default handler.
+Let me check the documentation more carefully:
+
+Read(docs/doc.flix.dev/default-handlers.html)
+⎿  Read 284 lines
+
+I see - the documentation shows Clock, Env, and Logger have 
+default handlers, but Random may not. Let me check the Random API:
+
+Search(pattern: "@DefaultHandler", path: "docs/api.flix.dev")
+⎿  Found 10 lines (ctrl+o to expand)
+
+Console and Logger have default handlers, but Random does not. 
+I need to keep Random.runWithIO() explicit:
+```
+
+The refactoring completes successfully. The new `main` is:
+
+```flix
+def main(): Unit \ {Console, IO, NonDet} =
+    let logFile = "game_log.txt";
+    // Initialize log file
+    discard FileWrite.runWithIO(() -> FileWrite.write({str = "=== Tic-Tac-Toe Game Log ===\n"}, logFile));
+    // Run the game - Console uses default handler, Random/Logger/FileWrite need explicit handlers
+    discard FileWrite.runWithIO(() ->
+        handleLoggerWithFile(logFile, () ->
+            Random.runWithIO(() ->
+                startGame()
+            )
+        )
+    )
+```
+
+**Ugh.** _This is not good._ While the code is technically correct, its
+structure is terrible. A few things have gone wrong, partly due to my own
+instructions:
+
+- I asked Claude to use default handlers for all effects. However, the
+  `FileWrite` effect has no default handler because it can fail. In particular,
+  `FileWrite.runWithIO` returns a `Result[IoError, Unit]`. Claude, in its
+  infinite wisdom, decided that we should simply discard the `Result` 🤡 
+- I asked Claude to use the `run-with` construct, but it did not.
+
+Let us try again, but this time we will be more specific:
+
+```prompt
+I want you to refactor main. I want it to use a single run-with construct.
+Let bind the result to a local variable called r. Inside the run, you
+should call FileWrite.write and startGame. You should then use "with" to
+install the handlers handleLoggerWithFile and Random.runWithIO. Lastly,
+pattern match on the result r, and print an error message using
+Console.println if it is Result.Err.
+```
+
+Now Claude consults the Flix documentation to learn about `run-with` and produces: 
+
+```
+def main(): Unit \ {Console, IO, NonDet} =
+    let logFile = "game_log.txt";
+    let r = run {
+        FileWrite.write({str = "=== Tic-Tac-Toe Game Log ===\n"}, logFile);
+        startGame()
+    } with handleLoggerWithFile(logFile)
+      with Random.runWithIO
+      with FileWrite.runWithIO;
+    match r {
+        case Result.Err(e) => Console.println("Error: ${e}")
+        case Result.Ok(_) => ()
+    }
+```
+
+Much better. This example shows that Claude is able to program effectively (no
+pun intended!) with a rich collection of effects. The program uses the
+`Console`, `FileWrite`, `Logger`, and `Random` effects. Embracing the richness
+of the domain, we handle the `Logger` effect using `handleLoggerWithFile`, which
+in turn causes the `FileWrite` effect. We then handle the remaining effects
+using their associated `runWithIO` handlers, introducing the _primitive_ effects
+`IO` and `NonDet`. Lastly, `Console` is handled by its default effect handler. 
+
+> **Aside:** This program illustrates how, in effect-oriented programming
+> languages, effects are pushed outwards toward `main`, where they must be
+> handled. In other words, all dependency injection and plumbing typically
+> happens near `main`, while most of the program remains pure modulo effects.
+
+We might be disappointed that `main` is still fairly complex. Why not use
+default handlers for `FileWrite` and `Random`? For `Random`, Flix has a
+limitation that prevents it. For `FileWrite`, errors are pushed to the handler
+rather than the call site, so we must handle them ourselves (here, by printing
+to the terminal). We could have used `FileWriteWithResult`, forcing the game to
+handle errors and allowing a default handler in `main`, but that would add
+complexity to the game logic.
+
+## Game API and Excerpts
+
+For reference, here are some of the function signatures of the game:
+
+```flix
+def aiMove(state: GameState): (Int32, Int32) \ Random =
+def cellToChar(cell: Cell): String =
+def displayBoard(state: GameState): Unit \ Console =
+def parseInt(s: String): Option[Int32] =
+def promptGridSize(): Int32 \ Console =
+def promptMove(state: GameState): (Int32, Int32) \ Console =
+def gameLoop(state: GameState): GameResult \ {Console, Logger, Random} =
+def startGame(): Unit \ {Console, Logger, Random} =
+def main(): Unit \ {Console, IO, NonDet} =
+```
+
+Claude has done a solid job breaking the game into smaller functions, each using
+only the effects it needs. Notably, the `IO` effect is only used by `main`. This
+is the essence of _effect-oriented programming_, and Claude has achieved it. 
+
+We can look at a few examples:
+
+```flix
+def startGame(): Unit \ {Console, Logger, Random} =
+    Console.println("Welcome to Tic-Tac-Toe!");
+    Console.println("======================");
+    let size = promptGridSize();
+    let state = initGameState(size);
+    Console.println("");
+    Console.println("Starting ${size}x${size} game. You are X, AI is O.");
+    Console.println("Get 3 in a row to win!");
+    Console.println("");
+    discard gameLoop(state)
+```
+
+Here `startGame` has the `Console`, `Logger`, and `Random` effects. `Console` is
+used directly, whereas `Logger` and `Random` are used by `gameLoop`. 
+
+And here is the `promptGridSize` function:
+
+```flix
+def promptGridSize(): Int32 \ Console =
+    Console.println("Enter grid size (3-9):");
+    let input = Console.readln();
+    match parseInt(String.trim(input)) {
+        case Some(n) if n >= 3 and n <= 9 => n
+        case _ =>
+            Console.println("Invalid size. Please enter a number between 3 and 9.");
+            promptGridSize()
+    }
+```
+
+
+## Lessons Learned
+
+I think the key lessons are:
+
+- Giving Claude access to the newest Flix API reference and documentation is
+  invaluable. Claude is surprisingly good at consulting both whenever it needs
+  to use a feature or runs into a problem.
+- Giving Claude access to the compiler is must. Furthermore, the Flix compiler’s
+  resilience allows Claude to discover and correct multiple issues in one pass. 
+
+Claude’s code style isn’t great. I’d call it unopinionated, which feels a bit
+odd—but perhaps makes sense, given that there isn’t yet a defined Flix style. In
+the future, I’d like to explore whether giving Claude a style guide would help.
+
+## Conclusions
+
+Returning to the central question of this blog post: 
+
+> **Will large language models (LLMs) help or hurt the adoption of new programming languages?**
+
+Based on my experience over the past six months, I’m convinced that LLMs will
+only help the adoption of new languages. We’ve seen that by giving Claude access
+to the Flix API reference, documentation, and compiler, it can become a capable
+Flix programmer. 
+
+While Claude makes silly syntax mistakes, which would not happen for Python or
+JavaScript, it can usually overcome them. More impressively, Claude is already
+capable of _effect-oriented programming_. It can write functions that use
+effects, functions that handle effects, and even intricate effect polymorphic
+functions such as `handleLoggerWithFile`. 
+
+Thus, I think, the future for new programming languages is as bright as ever.
+
+Until next time, happy Clauding.
