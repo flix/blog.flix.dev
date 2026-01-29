@@ -35,7 +35,7 @@ Works for single-line
 
 And works for multi-line
 
-![todo](effect-error.png)
+![todo](mismatched-types.png)
 
 
 # Straight to the point
@@ -52,3 +52,12 @@ Be brief when sufficient.
 ## With explanation and suggestions
 
 ![todo](constructor-not-found.png)
+
+
+## With detailed explanation and examples
+
+With extra details for extra complex cases
+
+![todo](complex-instance.png)
+
+That's all for now. Hope you enjoy our new colors!
