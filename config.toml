@@ -10,6 +10,7 @@ taxonomies = [
 ]
 
 [extra]
+skin = "red"
 show_author = true
 favicon = "favicon.png"
 menu = [
@@ -18,6 +19,3 @@ menu = [
 ]
 stylesheets = ["highlight.css", "highlight_fix.css"]
 enable_csp = false
-
-[markdown]
-highlight_code = false
