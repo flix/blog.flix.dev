@@ -8,5 +8,9 @@ authors = ["Magnus Madsen"]
 tags = ["language-design", "flix"]
 +++
 
+Inspired by 
+https://elm-lang.org/news/compilers-as-assistants
+
+
 Bla bla bla 
 
