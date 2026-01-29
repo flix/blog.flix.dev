@@ -13,47 +13,38 @@ Inspired by Elm's
 [Compilers as Assistants](https://elm-lang.org/news/compilers-as-assistants),
 we recently took the time to revisit all the error messages in the Flix compiler.
 
-We are excited to share that error messages are now designed to guide you from
-seeing an error to understanding and fixing it:
-- **Syntax highlighting** makes code fragments easy to read
-- **Friendly language** keeps messages clear and approachable
-- **Unique error codes** let you quickly identify and look up errors
-- **Detailed explanations** help you understand complex issues
-- **Examples and suggestions** guide you toward a fix
-
 Here is what you can look forward to in the next version of the Flix compiler:
 
-# Syntax Coloring
+# Syntax Highlighting
 
-Works for single-line 
+Code fragments now have syntax highlighting, making them easy to read—whether
+single-line:
 
-![todo](unexpected-argument.png)
+![unexpected argument](unexpected-argument.png)
 
-And works for multi-line
+Or multi-line:
 
-![todo](mismatched-types.png)
+![mismatched types](mismatched-types.png)
 
+# Straight To The Point
 
-# Straight to the point
+Simple errors are kept brief and friendly. No need for lengthy explanations when
+the issue is clear:
 
-Be brief when sufficient.
+![duplicate annotation](duplicate-annotation.png)
 
-![todo](duplicate-annotation.png)
+# Detailed Explanations
 
+For more complex errors, we provide detailed explanations with examples:
 
-## With explanation and examples
+![missing implementation](missing-implementation.png)
 
-![todo](missing-implementation.png)
+And suggestions to guide you toward a fix:
 
-## With explanation and suggestions
+![constructor not found](constructor-not-found.png)
 
-![todo](constructor-not-found.png)
+For the most intricate cases, we go even further with comprehensive explanations:
 
-
-## With detailed explanation and examples
-
-With extra details for extra complex cases
-
-![todo](complex-instance.png)
+![complex instance](complex-instance.png)
 
 That's all for now. Hope you enjoy our new colors!
