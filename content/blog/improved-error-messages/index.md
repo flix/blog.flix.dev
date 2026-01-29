@@ -1,6 +1,6 @@
 +++
 title = "Improved Error Messages"
-description = "TODO"
+description = "A look at the new and improved error messages in the Flix compiler, featuring syntax highlighting, helpful examples, and detailed explanations."
 date = 2026-02-01
 authors = ["Magnus Madsen"]
 
