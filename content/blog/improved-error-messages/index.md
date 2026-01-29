@@ -8,22 +8,18 @@ authors = ["Magnus Madsen"]
 tags = ["language-design", "flix"]
 +++
 
-Inspired by 
+Inspired by Elm's
+[Compiler Errors for Humans](https://elm-lang.org/news/compiler-errors-for-humans) and
+[Compilers as Assistants](https://elm-lang.org/news/compilers-as-assistants),
+we recently took the time to revisit all the error messages in the Flix compiler.
 
-https://elm-lang.org/news/compiler-errors-for-humans
-
-https://elm-lang.org/news/compilers-as-assistants
-
-We recently took the time go through all the Flix compiler messages.
-
-We now have:
-
-- Syntax highlighting!
-- All errors have unique error codes.
-- Short errors are just that short
-- Include important details where relevant
-- Difficult errors have explainations
-- friendly language
+We are excited to share that error messages are now designed to guide you from
+seeing an error to understanding and fixing it:
+- **Syntax highlighting** makes code fragments easy to read
+- **Friendly language** keeps messages clear and approachable
+- **Unique error codes** let you quickly identify and look up errors
+- **Detailed explanations** help you understand complex issues
+- **Examples and suggestions** guide you toward a fix
 
 Here is what you can look forward to in the next version of the Flix compiler:
 
