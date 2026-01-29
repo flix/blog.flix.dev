@@ -23,12 +23,32 @@ We now have:
 - Short errors are just that short
 - Include important details where relevant
 - Difficult errors have explainations
+- friendly language
 
-We illustrate with examples:
+Here is what you can look forward to in the next version of the Flix compiler:
+
+# Syntax Coloring
+
+Works for single-line 
+
+![todo](unexpected-argument.png)
+
+And works for multi-line
+
+![todo](effect-error.png)
 
 
+# Straight to the point
+
+Be brief when sufficient.
+
+![todo](duplicate-annotation.png)
+
+
+## With explanation and examples
+
+![todo](missing-implementation.png)
 
 ## With explanation and suggestions
 
-![constructor not found](constructor-not-found.png)
-
+![todo](constructor-not-found.png)
