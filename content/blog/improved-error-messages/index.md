@@ -1,5 +1,5 @@
 +++
-title = "Improved Error Messages"
+title = "Beautiful Errors: Making the Flix Compiler More Helpful"
 description = "A tour of the new and improved error messages in the Flix compiler, featuring syntax highlighting, clearer explanations, and actionable suggestions."
 date = 2026-02-01
 authors = ["Magnus Madsen"]
