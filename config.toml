@@ -11,6 +11,7 @@ taxonomies = [
 
 [extra]
 skin = "red"
+default_theme = "dark"
 show_author = true
 favicon = "favicon.png"
 menu = [

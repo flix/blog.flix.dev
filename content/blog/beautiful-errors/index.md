@@ -15,7 +15,7 @@ we recently took a step back and reworked *every* error message in the Flix comp
 
 Here is what you can look forward to in the next version of Flix:
 
-All error messages now have syntax highlighting. For single-line errors:
+All error messages now have **semantic** syntax highlighting. For single-line errors:
 ![unexpected argument](unexpected-argument.png)
 
 And for multi-line errors:
