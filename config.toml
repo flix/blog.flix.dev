@@ -3,6 +3,8 @@ theme = "tabi"
 base_url = "https://blog.flix.dev/"
 compile_sass = true
 build_search_index = false
+generate_feeds = true
+feed_filenames = ["atom.xml"]
 
 taxonomies = [
     {name = "tags", feed = true},
