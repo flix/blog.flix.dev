@@ -11,56 +11,32 @@ concurrency:
   group: build-${{ github.ref }}
 
 env:
-  CARGO_TERM_COLOR: always
+  ZOLA_VERSION: 0.22.1
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Check out PR
-        uses: actions/checkout@v5
-        with:
-          path: blog-site
-          submodules: true
-      - name: Set Zola version
-        id: zola-version
-        run: echo "version=v0.19.2" >> $GITHUB_OUTPUT
-      - name: Check out Zola cargo lock (for cache key)
-        uses: actions/checkout@v5
-        with:
-          repository: getzola/zola
-          ref: ${{ steps.zola-version.outputs.version }}
-          path: zola-cargo
-          sparse-checkout: |
-            Cargo.lock
-          sparse-checkout-cone-mode: false
-      - name: Restore cached cargo builds
-        id: cargo-cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('zola-cargo/Cargo.lock') }}
-      - name: Conditionally check out Zola (if version changed)
-        if: ${{ steps.cargo-cache.outputs.cache-hit != 'true' }}
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           submodules: true
-          repository: getzola/zola
-          ref: ${{ steps.zola-version.outputs.version }}
-          path: zola
-      - name: Conditionally build Zola (if no cached binary was found)
-        if: ${{ steps.cargo-cache.outputs.cache-hit != 'true' }}
-        run: cargo install --path zola/
+      - name: Install Zola
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          archive=zola-v${ZOLA_VERSION}-x86_64-unknown-linux-gnu.tar.gz
+          curl -sSfL -o "$archive" \
+            "https://github.com/getzola/zola/releases/download/v${ZOLA_VERSION}/${archive}"
+          # The release artifacts are signed with Sigstore; refuse anything unattested.
+          gh attestation verify "$archive" --repo getzola/zola
+          tar -xzf "$archive" zola
+          sudo install -m 755 zola /usr/local/bin/zola
+          rm "$archive" zola
+          zola --version
       - name: Build site
         run: make
-        working-directory: ./blog-site
       - name: Show build output
         run: |
-          tree .
+          tree public
           cat public/404.html
-          cat public/blog/design-flaws-in-flix/index.html
-        working-directory: ./blog-site
