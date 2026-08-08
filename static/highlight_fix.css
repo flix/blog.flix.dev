@@ -1,3 +1,12 @@
-pre.language-flix {
-    background-color: #f6f7f6;
+/*
+ * highlight.js sets its classes on the `code` element, so the block background
+ * has to sit on the `pre` -- otherwise it does not cover the padding, and it
+ * only covers blocks highlight.js actually highlighted.
+ *
+ * --codeblock-bg is dark in both themes, matching tabi's own code styling, so
+ * --text (light) is the readable foreground in both.
+ */
+pre {
+    background-color: var(--codeblock-bg);
+    color: var(--text);
 }
