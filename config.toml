@@ -1,8 +1,12 @@
 title = "The Flix Blog"
 theme = "tabi"
 base_url = "https://blog.flix.dev/"
+description = "The official blog of the Flix programming language."
 compile_sass = true
 build_search_index = false
+
+generate_feeds = true
+feed_filenames = ["atom.xml", "rss.xml"]
 
 taxonomies = [
     {name = "tags", feed = true},
