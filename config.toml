@@ -13,6 +13,22 @@ taxonomies = [
     {name = "authors", feed = true}
 ]
 
+[markdown.highlighting]
+enabled = true
+# Emit `z-*` classes rather than inline styles, so the colours live in the
+# `static/giallo.css` Zola generates from the theme below and the markup stays
+# free of inline styles should CSP ever be turned on. That stylesheet is linked
+# from templates/tabi/extend_head.html, and because it loads last it also wins
+# over the `z-*` rules tabi compiles into main.css.
+style = "class"
+# The theme decides both the colours and -- since each span is named after the
+# theme rule that matched it, not after the grammar scope -- how finely the code
+# is split up. Catppuccin is the family tabi's own syntax stylesheet was derived
+# from; Mocha is its darkest member, near the value tabi gave code blocks before.
+theme = "catppuccin-mocha"
+# The Flix grammar is not built in; `make` fetches it from flix/textmate.
+extra_grammars = ["syntaxes/flix.tmLanguage.json"]
+
 [extra]
 skin = "red"
 default_theme = "dark"
@@ -22,5 +38,4 @@ menu = [
     { name = "blog", url = "blog", trailing_slash = true },
     { name = "tags", url = "tags", trailing_slash = true },
 ]
-stylesheets = ["highlight.css", "highlight_fix.css"]
 enable_csp = false

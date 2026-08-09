@@ -1,1 +1,4 @@
 public
+# The syntax highlighting colours, written by Zola on every build from the theme
+# named in config.toml. Linked by templates/tabi/extend_head.html.
+static/giallo.css

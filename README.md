@@ -6,14 +6,21 @@
 2. `git clone git@github.com:flix/blog.flix.dev.git`
 3. `zola serve`
 
-## Updating highlight js
-Replace `static/highlight.js` with the new update and update the sha256 sum under `hljs_sha` in `config.toml`.
+## Syntax highlighting
+
+Code blocks are highlighted by Zola, using the grammar from
+[flix/textmate](https://github.com/flix/textmate) -- the same one flix.dev uses.
+It is vendored at `syntaxes/flix.tmLanguage.json` so that a clone builds with
+nothing but Zola. To pick up grammar changes, bump `GRAMMAR_COMMIT` in the
+`Makefile` and run `make update-grammar`.
+
+The colours come from the theme named in `[markdown.highlighting]`; Zola writes
+them to `static/giallo.css`, which `templates/tabi/extend_head.html` links.
+
+Changing the theme is a one-line edit, but delete `static/giallo.css` afterwards:
+Zola writes that file only when it is absent, so the old colours survive both a
+rebuild and a running `zola serve` until the stale copy is gone.
 
 ## Updating tabi submodule
 
-Ensure that the bottom of `themes\tabi\templates\partials\header.html` contains:
-
-```html
-<script defer src="{{ get_url(path='highlight.js') | safe }}"></script>
-<script defer src="{{ get_url(path='highlight_activate.js') | safe }}"></script>
-```
+Nothing to do beyond the update itself; the theme is used as it comes.
