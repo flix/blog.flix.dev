@@ -10,20 +10,15 @@ GRAMMAR := syntaxes/flix.tmLanguage.json
 
 .PHONY: build-site serve
 
-# Zola writes static/giallo.css only when it is absent, so a theme change in
-# config.toml would otherwise leave the old colours on disk forever.
 build-site: $(GRAMMAR)
-	rm -f static/giallo.css
 	zola build
 
 serve: $(GRAMMAR)
-	rm -f static/giallo.css
 	zola serve
 
 # Fetched rather than committed so this blog and flix.dev highlight Flix from
-# the same grammar. -f makes a 404 fail the build instead of writing a file
-# full of HTML.
+# the same grammar. -f makes a 404 fail the build instead of writing a file full
+# of HTML, and --create-dirs saves a `mkdir -p` that Windows shells lack.
 $(GRAMMAR): Makefile
-	@mkdir -p $(dir $@)
-	curl -sSfL -o $@ \
+	curl -sSfL --create-dirs -o $@ \
 	  https://raw.githubusercontent.com/flix/textmate/$(GRAMMAR_COMMIT)/syntaxes/flix.tmLanguage.json

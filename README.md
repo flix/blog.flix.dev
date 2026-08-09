@@ -17,7 +17,10 @@ To pick up grammar changes, bump `GRAMMAR_COMMIT` in the `Makefile`.
 
 The colours come from the theme named in `[markdown.highlighting]`; Zola writes
 them to `static/giallo.css`, which `templates/tabi/extend_head.html` links.
-Changing the theme is a one-line edit, and `make` regenerates the stylesheet.
+
+Changing the theme is a one-line edit, but delete `static/giallo.css` afterwards:
+Zola writes that file only when it is absent, so the old colours survive both a
+rebuild and a running `zola serve` until the stale copy is gone.
 
 ## Updating tabi submodule
 
