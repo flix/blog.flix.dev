@@ -1,24 +1,23 @@
-# The Flix grammar Zola highlights code blocks with. Pinned to a commit of
-# flix/textmate so a build is reproducible; bump the SHA to pick up grammar
-# changes. Editing this file re-triggers the fetch.
+# The Flix grammar Zola highlights code blocks with is vendored under syntaxes/,
+# so a clone builds with nothing but Zola -- no make, no shell, no network, which
+# matters on Windows, where make is not something the OS ships.
+#
+# To pick up grammar changes, bump the SHA below and run `make update-grammar`.
+# The refreshed grammar lands in the working tree, where a partial or wrong
+# download shows up as a diff before it can be committed.
 GRAMMAR_COMMIT := befa883ecec4b0c84e436bdd176dec5475e584ab
 GRAMMAR := syntaxes/flix.tmLanguage.json
 
-# Do not leave a half-written grammar behind: without this a download cut short
-# still satisfies the rule, and the next build silently reuses the truncated file.
-.DELETE_ON_ERROR:
+.PHONY: build-site serve update-grammar
 
-.PHONY: build-site serve
-
-build-site: $(GRAMMAR)
+build-site:
 	zola build
 
-serve: $(GRAMMAR)
+serve:
 	zola serve
 
-# Fetched rather than committed so this blog and flix.dev highlight Flix from
-# the same grammar. -f makes a 404 fail the build instead of writing a file full
-# of HTML, and --create-dirs saves a `mkdir -p` that Windows shells lack.
-$(GRAMMAR): Makefile
-	curl -sSfL --create-dirs -o $@ \
+# -f turns a 404 into a failure rather than a file full of HTML; --create-dirs
+# saves a `mkdir -p`, which cmd.exe does not have.
+update-grammar:
+	curl -sSfL --create-dirs -o $(GRAMMAR) \
 	  https://raw.githubusercontent.com/flix/textmate/$(GRAMMAR_COMMIT)/syntaxes/flix.tmLanguage.json
