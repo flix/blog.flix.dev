@@ -23,9 +23,13 @@ enabled = true
 style = "class"
 # The theme decides both the colours and -- since each span is named after the
 # theme rule that matched it, not after the grammar scope -- how finely the code
-# is split up. Catppuccin is the family tabi's own syntax stylesheet was derived
-# from; Mocha is its darkest member, near the value tabi gave code blocks before.
-theme = "catppuccin-mocha"
+# is split up. Two things are worth checking in a candidate, because neither is
+# visible from a screenshot of some other language: that no scope the Flix grammar
+# emits resolves back to the plain-text foreground, which is how Dracula renders
+# strings and Laserwave keywords -- unhighlighted, but only for grammars that lean
+# on that scope -- and that comments clear 3:1 against the code background, which
+# a fair number of the darker themes do not.
+theme = "rose-pine-moon"
 # The Flix grammar is not built in; `make` fetches it from flix/textmate.
 extra_grammars = ["syntaxes/flix.tmLanguage.json"]
 
